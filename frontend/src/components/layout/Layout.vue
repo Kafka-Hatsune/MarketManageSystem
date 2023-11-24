@@ -3,4 +3,4 @@ defineOptions({
   name: 'LayoutIndex'
 })
 </script>
-<template>这是组件</template>
+<template>这是Layout组件</template>
