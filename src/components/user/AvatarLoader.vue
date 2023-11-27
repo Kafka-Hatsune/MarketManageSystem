@@ -1,26 +1,24 @@
 <script setup>
-defineOptions({
-  name: 'AvatarLoader'
-})
+import { userUpdateAvatarService } from '@/api/user'
 import { ref } from 'vue'
 import { useUserStore } from '@/stores'
 import { ElMessage } from 'element-plus'
-import { Plus, Upload } from '@element-plus/icons-vue'
-import { userUpdateAvatarService } from '@/api/user'
+
 const userStore = useUserStore()
-const imgUrl = ref(userStore.user.avatar)
-const uploadRef = ref()
-const onSelectFile = (uploadFile) => {
-  // 基于 FileReader 读取图片做预览
+let file = new ref()
+const imgUrl = new ref()
+const upload = (event) => {
+  file = event.target.files[0]
   const reader = new FileReader()
-  reader.readAsDataURL(uploadFile.raw)
+  reader.readAsDataURL(file)
   reader.onload = () => {
     imgUrl.value = reader.result
   }
 }
-const onUpdateAvatar = async () => {
-  // 发送请求更新头像
-  await userUpdateAvatarService(imgUrl.value)
+const submit = async () => {
+  let formData = new FormData()
+  formData.append('avatar', file)
+  await userUpdateAvatarService(formData)
   // userStore 重新渲染
   await userStore.getUser()
   // 提示用户
@@ -28,58 +26,21 @@ const onUpdateAvatar = async () => {
 }
 </script>
 <template>
-  <el-upload
-    ref="uploadRef"
-    :auto-upload="false"
-    class="avatar-uploader"
-    :show-file-list="false"
-    :on-change="onSelectFile"
-  >
-    <!-- <img v-if="imgUrl" :src="imgUrl" class="avatar" /> -->
-    <img v-if="imgUrl" :src="imgUrl" />
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-  </el-upload>
-
+  <el-avatar v-if="imgUrl" :src="imgUrl" class="avatar" />
+  <el-avatar v-else :src="userStore.user.avatar" class="avatar" />
   <br />
-
-  <el-button
-    @click="uploadRef.$el.querySelector('input').click()"
-    type="primary"
-    :icon="Plus"
-    size="large"
-    >选择图片</el-button
-  >
-  <el-button @click="onUpdateAvatar" type="success" :icon="Upload" size="large"
-    >上传头像</el-button
-  >
+  <el-row>
+    <el-col><input type="file" @change="upload($event)" /></el-col>
+  </el-row>
+  <el-row>
+    <button @click="submit($event)">确认上传</button>
+  </el-row>
 </template>
-<style lang="scss" scoped>
-.avatar-uploader {
-  :deep() {
-    .avatar {
-      // display: block;
-      border-radius: 50px 50px 50px 50px;
-      transform: rotate(360deg);
-      transform-origin: 0 100%;
-    }
-    .el-upload {
-      cursor: pointer; // 设置鼠标悬停在元素上时显示为手型。
-      position: relative;
-      overflow: hidden;
-      transition: var(
-        --el-transition-duration-fast
-      ); // 设置元素的过渡效果，使用变量 var(--el-transition-duration-fast)。
-    }
-    .el-upload:hover {
-      border-color: var(--el-color-primary);
-    }
-    // .el-icon.avatar-uploader-icon {
-    //   font-size: 28px;
-    //   color: #8c939d;
-    //   width: 278px;
-    //   height: 278px;
-    //   text-align: center;
-    // }
-  }
+
+<style scoped>
+.avatar {
+  width: 250px;
+  height: 250px;
+  display: block;
 }
 </style>

@@ -1,13 +1,17 @@
 <script setup>
 import {
-  Management,
   Promotion,
   UserFilled,
   User,
   Crop,
   EditPen,
   SwitchButton,
-  CaretBottom
+  CaretBottom,
+  Goods,
+  ShoppingTrolley,
+  StarFilled,
+  UploadFilled,
+  HomeFilled
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
@@ -17,8 +21,6 @@ import { useRouter } from 'vue-router'
 
 // 组件
 import CurrentTime from '@/components/timer/Clock.vue'
-import LayoutIndex from '@/components/layout/Layout.vue'
-import IndexCard from '@/components/layout/Card.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -73,36 +75,45 @@ const handleCommand = async (key) => {
       >
         <!-- el-menu-item 菜单项
           index="/article/channel" 配置的是访问的跳转路径，配合default-active的值，实现高亮 -->
-        <el-menu-item index="/article/channel">
-          <el-icon><Management /></el-icon>
-          <span>文章分类</span>
-        </el-menu-item>
-        <el-menu-item index="/article/manage">
-          <el-icon><Promotion /></el-icon>
-          <span>文章管理</span>
+        <el-menu-item index="/home">
+          <el-icon><HomeFilled /></el-icon>
+          <span>主页</span>
         </el-menu-item>
 
-        <el-sub-menu index="/user">
+        <el-sub-menu index="/product">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
-            <el-icon><UserFilled /></el-icon>
-            <span>个人中心</span>
+            <el-icon><Goods /></el-icon>
+            <span>商品管理</span>
           </template>
 
           <!-- 展开的内容 - 默认插槽 -->
-          <el-menu-item index="/user/profile">
-            <el-icon><User /></el-icon>
-            <span>基本资料</span>
+          <el-menu-item index="/product/new">
+            <el-icon><Promotion /></el-icon>
+            <span>发布新商品</span>
           </el-menu-item>
-          <el-menu-item index="/user/avatar">
-            <el-icon><Crop /></el-icon>
-            <span>更换头像</span>
+          <el-menu-item index="/product/posted">
+            <el-icon><UploadFilled /></el-icon>
+            <span>我的已发布商品</span>
           </el-menu-item>
-          <el-menu-item index="/user/password">
-            <el-icon><EditPen /></el-icon>
-            <span>重置密码</span>
+          <el-menu-item index="/product/star">
+            <el-icon><StarFilled /></el-icon>
+            <span>收藏夹</span>
+          </el-menu-item>
+          <el-menu-item index="/product/cart">
+            <el-icon><ShoppingTrolley /></el-icon>
+            <span>购物车</span>
           </el-menu-item>
         </el-sub-menu>
+
+        <el-menu-item index="/user/profile">
+          <el-icon><UserFilled /></el-icon>
+          <span>个人中心</span>
+        </el-menu-item>
+        <el-menu-item @click="handleCommand('logout')">
+          <el-icon><SwitchButton /></el-icon>
+          <span>退出登陆</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <!-- 侧边栏右半部 -->
@@ -112,7 +123,7 @@ const handleCommand = async (key) => {
         <el-col :span="8"></el-col>
         <el-col :span="8"></el-col>
         <el-col :span="4">
-          <div><currentTime></currentTime></div>
+          <div><CurrentTime></CurrentTime></div>
         </el-col>
         <el-col :span="3">
           {{ userStore.user.userName }} : {{ greeting }}

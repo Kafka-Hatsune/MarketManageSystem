@@ -15,17 +15,12 @@ export const userGetInfoService = () => request.get('/user')
 export const userUpdateInfoService = ({ id, name, email, avatar }) =>
   request.patch('/user/update', { id, name, email, avatar })
 
-// 更新用户头像
-export const userUpdateAvatarService = (avatar) => {
-  console.log(avatar)
-  request.post(
-    'user/avatar/update',
-    { avatar: avatar },
-    {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    }
-  )
-}
+// 更新用户头像 avatar为FormData
+export const userUpdateAvatarService = (avatar) =>
+  request.post('user/avatar/update', avatar, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+
 // 用户新建收货信息
 export const userCreateRecInfoService = ({ recName, phone, place }) =>
   request.post('/user/recInfor/new', {

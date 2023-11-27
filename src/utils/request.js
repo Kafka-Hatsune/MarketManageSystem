@@ -4,6 +4,7 @@ import router from '@/router'
 import { ElMessage } from 'element-plus'
 
 const baseURL = 'http://127.0.0.1:4523/m1/3576156-0-default'
+// const baseURL = 'http://127.0.0.1:8000/'
 // 创建一个新的axios实例
 const instance = axios.create({
   baseURL, // 基础地址
@@ -16,7 +17,7 @@ instance.interceptors.request.use(
     // 请求携带token时填充请求头的Authorization
     const useStore = useUserStore()
     if (useStore.token) {
-      config.headers.Authorization = useStore.token
+      config.headers.Authorization = 'Bearer ' + useStore.token
     }
     return config
   },
@@ -26,6 +27,7 @@ instance.interceptors.request.use(
 // 新实例instance的响应拦截器
 instance.interceptors.response.use(
   (res) => {
+    console.log('经过了响应拦截器')
     // 200 OK
     if (res.data.code === 200) {
       return res

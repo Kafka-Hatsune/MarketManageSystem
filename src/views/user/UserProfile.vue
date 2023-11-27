@@ -54,9 +54,12 @@ const submitForm = async () => {
           <!-- <h3 class="center">用户头像</h3> -->
           <el-row>
             <el-col :span="8"></el-col>
-            <el-col :span="8">用户头像</el-col>
+            <el-col :span="8">
+              <div class="center">用户头像</div>
+            </el-col>
             <el-col :span="8"></el-col>
           </el-row>
+          <br />
           <el-row>
             <el-col :span="3"></el-col>
             <el-col :span="18"><AvatarLoader></AvatarLoader></el-col>
