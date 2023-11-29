@@ -47,6 +47,45 @@ const router = createRouter({
           component: () => import('@/views/product/ProductCart.vue')
         }
       ]
+    },
+    {
+      path: '/admin/',
+      component: () => import('@/views/layout/AdminLayoutContainer.vue'),
+      redirect: '/admin/home',
+      children: [
+        {
+          path: '/admin/home',
+          component: () => import('@/views/home/HomePage.vue')
+        },
+        {
+          path: '/admin/user/profile',
+          component: () => import('@/views/user/UserProfile.vue')
+        },
+        {
+          path: '/admin/product/:id',
+          component: () => import('@/views/product/ProductDetail.vue')
+        },
+        {
+          path: '/admin/product/new',
+          component: () => import('@/views/product/ProductNew.vue')
+        },
+        {
+          path: '/admin/product/posted',
+          component: () => import('@/views/product/ProductPosted.vue')
+        },
+        {
+          path: '/admin/product/:id/modify',
+          component: () => import('@/views/product/ProductModify.vue')
+        },
+        {
+          path: '/admin/product/star',
+          component: () => import('@/views/product/ProductStar.vue')
+        },
+        {
+          path: '/admin/product/cart',
+          component: () => import('@/views/product/ProductCart.vue')
+        }
+      ]
     }
   ]
 })

@@ -1,6 +1,6 @@
 <script setup>
 import { useProductStore } from '@/stores'
-import { onMounted, ref, toRef } from 'vue'
+import { onMounted, ref, Text, toRef } from 'vue'
 import { commentSubmitService } from '@/api/comment'
 import {
   productPurchaseService,
@@ -67,6 +67,40 @@ const submitDelete = async (productId) => {
         </el-col>
         <el-col :span="2"></el-col>
       </el-row>
+      <el-row>
+        <el-col :span="2"></el-col>
+        <el-col :span="20">
+      <h1>商品评论</h1>
+      <el-input
+        v-model="commentText"
+        :autosize="{ minRows: 2, maxRows: 5 }"
+        type="textarea"
+        clearable
+        placeholder="新增评论"
+      />
+      <el-button @click="submitComment">提交</el-button>
+      <ul class="ul-comment">
+        <li
+          class="li-comment"
+          v-for="comment in productStore.product.comments"
+          :key="comment.createdTime"
+        >
+          <el-row>
+            <el-avatar :src="comment.publisher.avatar || avatar" />
+            <span style="height: line-height">
+              {{ comment.publisher.userName }}</span
+            >
+          </el-row>
+          <div>{{ comment.text }}</div>
+          <div><label style="color:#aaaaaa">{{ comment.createdTime }}</label></div>
+          <br>
+        </li>
+      </ul>
+        </el-col>
+        <el-col :span="2"></el-col>
+      </el-row>
+
+
     </el-col>
     <el-col :span="8">
       <h1 class="title">{{ productStore.product.productName }}</h1>
@@ -123,31 +157,6 @@ const submitDelete = async (productId) => {
         </li>
       </ul>
 
-      <h1>商品评论</h1>
-      <el-input
-        v-model="commentText"
-        :autosize="{ minRows: 2, maxRows: 5 }"
-        type="textarea"
-        clearable
-        placeholder="新增评论"
-      />
-      <el-button @click="submitComment">提交</el-button>
-      <ul class="ul-comment">
-        <li
-          class="li-comment"
-          v-for="comment in productStore.product.comments"
-          :key="comment.createdTime"
-        >
-          <el-row>
-            <el-avatar :src="comment.publisher.avatar || avatar" />
-            <span style="height: line-height">
-              {{ comment.publisher.userName }}</span
-            >
-          </el-row>
-          <div>{{ comment.text }}</div>
-          <div>{{ comment.createdTime }}</div>
-        </li>
-      </ul>
     </el-col>
   </el-row>
 </template>
