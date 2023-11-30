@@ -17,11 +17,26 @@ urlpatterns = [
 
     # product
     path("products", Product.GetAllProducts.as_view()),
-    # path('products/<int:productId>', ),
-    # path("products/posted", Product.GetPostedProducts.as_view()),
+    path("products/<int:product_id>", Product.GetProduct.as_view()),
+    path("products/posted", Product.GetPostedProducts.as_view()),
     path("product/new", Product.PostProduct.as_view()),
+    path("product/modify", Product.ProductModify.as_view()),
     path("product/comments/new", Product.AddProductComment.as_view()),
 
+    path("productTypes", Product.GetProductTypes.as_view()),
+    path("products/purchase", Product.PurchaseProduct.as_view()),
+
+    # 收藏夹
+    path("product/star/switch", Product.ChangeStarStatus.as_view()),
+    path("product/star/select", Product.ProductStarSelect.as_view()),
+    path("product/star", Product.GetStarredProducts.as_view()),
+
+    # 购物车
+    path("product/cart", Product.GetProductsInCart.as_view()),
+    path("product/cart/new", Product.AddProductToCart.as_view()),
+    path("product/cart/delete", Product.DeleteProductFromCart.as_view()),
+    path("product/cart/select", Product.ProductCartSelect.as_view()),
+    path("product/cart/modify", Product.CartModify.as_view()),
 
     # 访问图片
     re_path(r'media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),

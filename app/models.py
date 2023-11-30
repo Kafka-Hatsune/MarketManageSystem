@@ -88,6 +88,12 @@ class Favorite(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    count = models.IntegerField()
+    create_time = models.DateTimeField(auto_now_add=True)    # 加入购物车的时间
+
+    def get_create_time(self):
+        time = self.create_time.strftime('%Y-%m-%d %H:%M:%S')
+        return time
 
     class Meta:
         db_table = 'cart'
@@ -102,8 +108,8 @@ class Order(models.Model):
     # seller = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     number = models.IntegerField()
-    # status = models.CharField()
     create_time = models.DateTimeField(auto_now_add=True)
+    # status = models.CharField()
 
     def get_create_time(self):
         time = self.create_time.strftime('%Y-%m-%d %H:%M:%S')
