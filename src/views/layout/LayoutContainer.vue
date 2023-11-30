@@ -106,6 +106,24 @@ const handleCommand = async (key) => {
           </el-menu-item>
         </el-sub-menu>
 
+        <el-sub-menu index="/product">
+          <!-- 多级菜单的标题 - 具名插槽 title -->
+          <template #title>
+            <el-icon><Goods /></el-icon>
+            <span>订单管理(beta)</span>
+          </template>
+        
+          <!-- 展开的内容 - 默认插槽 -->
+          <el-menu-item index="/order/consumer">
+            <el-icon><Promotion /></el-icon>
+            <span>我的购买</span>
+          </el-menu-item>
+          <el-menu-item index="/order/seller">
+            <el-icon><UploadFilled /></el-icon>
+            <span>我的卖出</span>
+          </el-menu-item>
+        </el-sub-menu>
+
         <el-menu-item index="/user/profile">
           <el-icon><UserFilled /></el-icon>
           <span>个人中心</span>
