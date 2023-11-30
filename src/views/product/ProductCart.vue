@@ -50,7 +50,7 @@ const submitDeleteAll = async () => {
         class="hover-zoom"
       >
         <el-image
-          :src="product.productPic[0]"
+          :src="product.productPic"
           style="width: 200px; height: 200px"
         />
         <div style="padding: 14px">
