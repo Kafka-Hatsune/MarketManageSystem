@@ -56,7 +56,7 @@ console.log('--------------------------------')
     <el-col
       :span="6"
       v-for="order in orderStore.orderSellerList"
-      :key="order1"
+      :key="order"
     >
       <el-card
         :body-style="{ padding: '0px' }"

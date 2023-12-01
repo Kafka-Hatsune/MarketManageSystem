@@ -1,3 +1,4 @@
+//*
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
@@ -8,8 +9,12 @@ import {
   productIfStarService,
   productGetStarService,
   productGetCartService,
-  productCartSelectService
+  productCartSelectService,
 } from '../../api/product'
+import {
+    orderGetConsumer,
+    orderGetSeller
+} from '../../api/order'
 
 export const useOrderStore = defineStore('product', () => {
   // 声明数据
@@ -23,6 +28,8 @@ export const useOrderStore = defineStore('product', () => {
   const starProductList = ref([])
   const cartProductList = ref([])
   const productIfCart = ref()
+  const OrderSellerList = ref({})
+  const OrderConsumerList = ref({})
   // 声明操作数据的方法
   const getProducts = async () => {
     const res = await productGetAllInfoService()
@@ -63,6 +70,14 @@ export const useOrderStore = defineStore('product', () => {
     const res = await productCartSelectService(id)
     productIfCart.value = res.data.data
   }
+  const getOrderSeller = async () => {
+    const res = await orderGetSeller()
+    OrderSellerList.value = res.data.data
+  }
+  const getOrderConsumer = async () => {
+    const res = await orderGetConsumer()
+    OrderConsumerList.value = res.data.data
+  }
   return {
     productList,
     product,
@@ -81,14 +96,18 @@ export const useOrderStore = defineStore('product', () => {
     getCartProducts,
     cartProductList,
     checkIfCart,
-    productIfCart
+    productIfCart,
+    OrderSellerList,
+    OrderConsumerList,
+    getOrderSeller,
+    getOrderConsumer
   }
 })
 
 
 
+/*/
 
-/*
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
@@ -164,4 +183,4 @@ export const useOrderStore = defineStore('order', () => {
     getOrderConsumer
   }
 })
-*/
+//*/
