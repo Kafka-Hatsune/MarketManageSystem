@@ -60,7 +60,7 @@ const submitDeleteAll = async () => {
             ><span class="price2">{{ product.price }}</span>
             <el-input-number
               v-model="product.count"
-              :min="0"
+              :min="1"
               :max="product.stock"
               controls-position="right"
             />

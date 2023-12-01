@@ -137,7 +137,7 @@ const onSubmit = async () => {
     </el-form-item>
     <!-- 提交表单 -->
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">发布商品</el-button>
+      <el-button type="primary" @click="onSubmit">修改商品</el-button>
     </el-form-item>
   </el-form>
 </template>
