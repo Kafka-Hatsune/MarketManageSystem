@@ -7,23 +7,12 @@ import router from '@/router'
 
 // 组件
 // import PostStatistic from '@/components/statistic/PostStatistic.vue'
-//const orderStore = useOrderStore()
+const orderStore = useOrderStore()
 const productStore = useProductStore()
 onMounted(() => {
   productStore.getPostedProducts()
   orderStore.getOrderSeller()
 })
-const jump2Details = (key) => {
-  const ownJudge = productStore.postProductList.some(
-    (product) => product.productId === key
-  )
-  // TODO 把商品所属检测搞成全局/后端检测
-  if (ownJudge) {
-    router.push(`/product/${key}/modify`)
-  } else {
-    ElMessage.error('你没有该商品的修改权限')
-  }
-}
 const postProductList1 = productStore.postProductList
 // productStore.postProductList.push({ productName: 111 })
 console.log('--------------------------------')
@@ -66,8 +55,8 @@ console.log('--------------------------------')
   <el-row :gutter="20">
     <el-col
       :span="6"
-      v-for="project in productStore.postProductList"
-      :key="project"
+      v-for="order in orderStore.orderSellerList"
+      :key="order"
     >
       <el-card
         :body-style="{ padding: '0px' }"
@@ -76,23 +65,17 @@ console.log('--------------------------------')
         class="hover-zoom"
       >
         <el-image
-          :src="product.productPic[0]"
+          :src="order.product.productPic[0]"
           style="width: 200px; height: 200px"
         />
         <div style="padding: 14px">
-          <span>{{ product.ProductName }}</span>
+          <span>{{ order.product.ProductName }}</span>
           <div class="price">
             <span class="price1">¥</span
-            ><span class="price2">{{ product.price }}</span>
+            ><span class="price2">{{ order.product.price }}</span>
           </div>
           <div class="bottom">
-            <time class="time">{{ product.createdTime }}</time>
-            <el-button
-              text
-              class="button"
-              @click.stop="jump2Details(product.productId)"
-              >详情页</el-button
-            >
+            <time class="time">{{ order.product.createdTime }}</time>
           </div>
         </div>
       </el-card>

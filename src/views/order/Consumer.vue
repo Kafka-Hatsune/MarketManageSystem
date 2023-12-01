@@ -1,14 +1,17 @@
 <script setup>
 import { onMounted } from 'vue'
+import { useOrderStore } from '@/stores'
 import { useProductStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
 // 组件
 // import PostStatistic from '@/components/statistic/PostStatistic.vue'
+const orderStore = useOrderStore()
 const productStore = useProductStore()
 onMounted(() => {
   productStore.getPostedProducts()
+  orderStore.getOrderSeller()
 })
 const jump2Details = (key) => {
   const ownJudge = productStore.postProductList.some(
