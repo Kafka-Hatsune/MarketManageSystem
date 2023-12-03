@@ -69,7 +69,7 @@ console.log('--------------------------------')
       <el-card
         :body-style="{ padding: '0px' }"
         style="margin-top: 15px"
-        @click.stop="jump2Details(props.product.productId)"
+        @click.stop="jump2Details(product.productId)"
         class="hover-zoom"
       >
         <el-image
