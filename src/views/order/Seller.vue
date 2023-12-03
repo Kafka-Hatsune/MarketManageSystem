@@ -18,6 +18,8 @@ const postProductList1 = productStore.postProductList
 console.log('--------------------------------')
 console.log(postProductList1)
 console.log(productStore.postProductList.at(0))
+console.log('<orderSeller>')
+console.log(orderStore.orderSellerList)
 console.log('--------------------------------')
 // const sales = productStore.postProductList.value.reduce((product, num) => {
 //   console.log(product.value)
@@ -54,14 +56,14 @@ console.log('--------------------------------')
   <hr />
   <el-row :gutter="20">
     <el-col
-      :span="6"
+      :span="4"
       v-for="order in orderStore.orderSellerList"
       :key="order"
     >
       <el-card
         :body-style="{ padding: '0px' }"
         style="margin-top: 15px"
-        @click.stop="jump2Details(props.product.productId)"
+        @click.stop="jump2Details(product.productId)"
         class="hover-zoom"
       >
         <el-image
@@ -71,11 +73,15 @@ console.log('--------------------------------')
         <div style="padding: 14px">
           <span>{{ order.product.ProductName }}</span>
           <div class="price">
-            <span class="price1">¥</span
-            ><span class="price2">{{ order.product.price }}</span>
+            <span class="price1"></span
+            ><span class="price2">{{ order.buyer.userName }} 购买 {{ order.number }} 件</span>
+          </div>
+          <div class="price">
+            <span class="price1">实付 ¥</span
+            ><span class="price2">{{ order.product.price*order.number }}</span>
           </div>
           <div class="bottom">
-            <time class="time">{{ order.product.createdTime }}</time>
+            <time class="time">{{ order.createdTime }}</time>
           </div>
         </div>
       </el-card>

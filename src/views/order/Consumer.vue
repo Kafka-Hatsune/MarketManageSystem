@@ -1,98 +1,51 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useOrderStore } from '@/stores'
-import { useProductStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
 // 组件
 // import PostStatistic from '@/components/statistic/PostStatistic.vue'
 const orderStore = useOrderStore()
-const productStore = useProductStore()
 onMounted(() => {
-  productStore.getPostedProducts()
   orderStore.getOrderSeller()
 })
-const jump2Details = (key) => {
-  const ownJudge = productStore.postProductList.some(
-    (product) => product.productId === key
-  )
-  // TODO 把商品所属检测搞成全局/后端检测
-  if (ownJudge) {
-    router.push(`/product/${key}/modify`)
-  } else {
-    ElMessage.error('你没有该商品的修改权限')
-  }
-}
-const postProductList1 = productStore.postProductList
-// productStore.postProductList.push({ productName: 111 })
 console.log('--------------------------------')
-console.log(postProductList1)
-console.log(productStore.postProductList.at(0))
+console.log('<orderSeller>')
+console.log(orderStore.orderSellerList)
 console.log('--------------------------------')
-// const sales = productStore.postProductList.value.reduce((product, num) => {
-//   console.log(product.value)
-//   product.sale + num
-// }, 0)
 </script>
 <template>
   <!-- {{ productStore.postProductList }} -->
-  <!-- 统计已售出商品的数量 已售出商品的金额 在售商品的件数 与之完成订单的用户数 -->
-  <el-row>
-    <el-col :span="3"></el-col>
-    <el-col :span="6">
-      <el-statistic
-        title="已售出商品量"
-        :value="productStore.sales_quantity"
-        class="center"
-      />
-    </el-col>
-    <el-col :span="6">
-      <el-statistic
-        title="销售额"
-        :value="productStore.sales_volume"
-        style="margin: 0 auto"
-      />
-    </el-col>
-    <el-col :span="6">
-      <el-statistic
-        title="在售商品数"
-        :value="productStore.postProductList.length"
-      />
-    </el-col>
-    <el-col :span="3"></el-col>
-  </el-row>
   <hr />
   <el-row :gutter="20">
     <el-col
-      :span="6"
-      v-for="product in productStore.postProductList"
-      :key="product"
+      :span="4"
+      v-for="order in orderStore.orderSellerList"
+      :key="order"
     >
       <el-card
         :body-style="{ padding: '0px' }"
         style="margin-top: 15px"
-        @click.stop="jump2Details(props.product.productId)"
+        @click.stop="jump2Details(product.productId)"
         class="hover-zoom"
       >
         <el-image
-          :src="product.productPic[0]"
+          :src="order.product.productPic[0]"
           style="width: 200px; height: 200px"
         />
         <div style="padding: 14px">
-          <span>{{ product.ProductName }}</span>
+          <span>{{ order.product.ProductName }}</span>
           <div class="price">
-            <span class="price1">¥</span
-            ><span class="price2">{{ product.price }}</span>
+            <span class="price1"></span
+            ><span class="price2">从 {{ order.seller.userName }} 购买 {{ order.number }} 件</span>
+          </div>
+          <div class="price">
+            <span class="price1">实付 ¥</span
+            ><span class="price2">{{ order.product.price*order.number }}</span>
           </div>
           <div class="bottom">
-            <time class="time">{{ product.createdTime }}</time>
-            <el-button
-              text
-              class="button"
-              @click.stop="jump2Details(product.productId)"
-              >详情页</el-button
-            >
+            <time class="time">{{ order.created_time }}</time>
           </div>
         </div>
       </el-card>
