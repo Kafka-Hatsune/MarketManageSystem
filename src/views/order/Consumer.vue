@@ -27,7 +27,7 @@ console.log('--------------------------------')
       <el-card
         :body-style="{ padding: '0px' }"
         style="margin-top: 15px"
-        @click.stop="jump2Details(props.product.productId)"
+        @click.stop="jump2Details(product.productId)"
         class="hover-zoom"
       >
         <el-image
@@ -45,7 +45,7 @@ console.log('--------------------------------')
             ><span class="price2">{{ order.product.price*order.number }}</span>
           </div>
           <div class="bottom">
-            <time class="time">{{ order.product.createdTime }}</time>
+            <time class="time">{{ order.created_time }}</time>
           </div>
         </div>
       </el-card>
