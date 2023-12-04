@@ -1,15 +1,14 @@
 <script setup>
 import {
-  Promotion,
   UserFilled,
   User,
   Crop,
   EditPen,
   SwitchButton,
   CaretBottom,
-  Goods,
-  UploadFilled,
-  HomeFilled
+  HomeFilled,
+  Plus,
+  List
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
@@ -81,23 +80,23 @@ const handleCommand = async (key) => {
         <el-sub-menu index="/admin/user">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
-            <el-icon><Goods /></el-icon>
+            <el-icon><UserFilled /></el-icon>
             <span>用户管理</span>
           </template>
 
           <!-- 展开的内容 - 默认插槽 -->
           <el-menu-item index="/admin/user/new">
-            <el-icon><Promotion /></el-icon>
+            <el-icon><Plus /></el-icon>
             <span>新增用户</span>
           </el-menu-item>
           <el-menu-item index="/admin/user/list">
-            <el-icon><UploadFilled /></el-icon>
+            <el-icon><List /></el-icon>
             <span>用户列表</span>
           </el-menu-item>
         </el-sub-menu>
 
         <el-menu-item index="/admin/order">
-          <el-icon><UserFilled /></el-icon>
+          <el-icon><List /></el-icon>
           <span>订单管理</span>
         </el-menu-item>
         <el-menu-item index="/home">

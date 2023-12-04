@@ -11,7 +11,10 @@ import {
   ShoppingTrolley,
   StarFilled,
   UploadFilled,
-  HomeFilled
+  HomeFilled,
+  WalletFilled,
+  Wallet,
+  Calendar
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
@@ -127,7 +130,7 @@ const askPermissionForAdmin = async () => {
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
             <el-icon>
-              <Goods />
+              <Calendar />
             </el-icon>
             <span>订单管理</span>
           </template>
@@ -135,13 +138,13 @@ const askPermissionForAdmin = async () => {
           <!-- 展开的内容 - 默认插槽 -->
           <el-menu-item index="/order/consumer">
             <el-icon>
-              <Promotion />
+              <Wallet />
             </el-icon>
             <span>我的购买</span>
           </el-menu-item>
           <el-menu-item index="/order/seller">
             <el-icon>
-              <UploadFilled />
+              <WalletFilled />
             </el-icon>
             <span>我的卖出</span>
           </el-menu-item>
