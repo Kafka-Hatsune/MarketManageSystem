@@ -1,74 +1,153 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useOrderStore } from '@/stores'
-import { ElMessage } from 'element-plus'
-import router from '@/router'
+import { ElMessageBox } from 'element-plus'
+import { orderChangeStateService } from '@/api/order'
 
-// 组件
-// import PostStatistic from '@/components/statistic/PostStatistic.vue'
 const orderStore = useOrderStore()
 onMounted(() => {
-  orderStore.getOrderSeller()
+  orderStore.getOrderConsumer()
 })
-console.log('--------------------------------')
-console.log('<orderSeller>')
-console.log(orderStore.orderSellerList)
-console.log('--------------------------------')
+const changeState = async (id, state) => {
+  await ElMessageBox.confirm('你确认要收货么', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await orderChangeStateService({ id, state })
+  orderStore.getOrderConsumer()
+}
+
+const showType = ref('已完成')
 </script>
 <template>
-  <!-- {{ productStore.postProductList }} -->
-  <hr />
-  <el-row :gutter="20">
-    <el-col
-      :span="4"
-      v-for="order in orderStore.orderSellerList"
+  <div>
+    <el-radio-group v-model="showType" size="large">
+      <el-radio-button label="已完成" />
+      <el-radio-button label="未完成" />
+    </el-radio-group>
+  </div>
+  <template v-if="showType === '已完成'">
+    <el-descriptions
+      :column="3"
+      v-for="order in orderStore.orderConsumerList.filter(
+        (element) => element.status === 'Completed'
+      )"
       :key="order"
+      :title="`您于${order.createdTime}创建的订单`"
+      border
     >
-      <el-card
-        :body-style="{ padding: '0px' }"
-        style="margin-top: 15px"
-        @click.stop="jump2Details(product.productId)"
-        class="hover-zoom"
+      <el-descriptions-item
+        label="卖家用户名"
+        label-align="right"
+        align="center"
+        width="150px"
+        >{{ order.seller.userName }}</el-descriptions-item
       >
-        <el-image
-          :src="order.product.productPic[0]"
-          style="width: 200px; height: 200px"
-        />
-        <div style="padding: 14px">
-          <span>{{ order.product.ProductName }}</span>
-          <div class="price">
-            <span class="price1"></span
-            ><span class="price2">从 {{ order.seller.userName }} 购买 {{ order.number }} 件</span>
-          </div>
-          <div class="price">
-            <span class="price1">实付 ¥</span
-            ><span class="price2">{{ order.product.price*order.number }}</span>
-          </div>
-          <div class="bottom">
-            <time class="time">{{ order.created_time }}</time>
-          </div>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
 
-  <!-- {{ productStore.postProductList }} -->
+      <el-descriptions-item label="商品名" label-align="right" align="center">
+        {{ order.product.productName }}
+      </el-descriptions-item>
+
+      <el-descriptions-item label="商品单价" label-align="right" align="center">
+        {{ order.product.price }}
+      </el-descriptions-item>
+      <el-descriptions-item label="购买数量" label-align="right" align="center">
+        {{ order.number }}
+      </el-descriptions-item>
+      <el-descriptions-item label="应付金额" label-align="right" align="center">
+        {{ order.number * order.product.price }}
+      </el-descriptions-item>
+      <el-descriptions-item label="订单状态" label-align="right" align="center">
+        {{ order.status }}
+      </el-descriptions-item>
+
+      <el-descriptions-item
+        label="收货人姓名"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.name }}
+      </el-descriptions-item>
+      <el-descriptions-item
+        label="收货人电话"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.phone }}
+      </el-descriptions-item>
+      <el-descriptions-item
+        label="收货人地址"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.place }}
+      </el-descriptions-item>
+    </el-descriptions>
+  </template>
+  <template v-else-if="showType === '未完成'">
+    <el-descriptions
+      :column="3"
+      v-for="order in orderStore.orderConsumerList.filter(
+        (element) => element.status !== 'Completed'
+      )"
+      :key="order"
+      :title="`您于${order.createdTime}创建的订单`"
+      border
+    >
+      <template #extra v-if="order.status === 'InTransit'">
+        <el-button type="danger" @click="changeState(order.id, 'Completed')"
+          >设为已收货</el-button
+        >
+      </template>
+      <el-descriptions-item
+        label="卖家用户名"
+        label-align="right"
+        align="center"
+        width="150px"
+        >{{ order.seller.userName }}</el-descriptions-item
+      >
+
+      <el-descriptions-item label="商品名" label-align="right" align="center">
+        {{ order.product.productName }}
+      </el-descriptions-item>
+
+      <el-descriptions-item label="商品单价" label-align="right" align="center">
+        {{ order.product.price }}
+      </el-descriptions-item>
+      <el-descriptions-item label="购买数量" label-align="right" align="center">
+        {{ order.number }}
+      </el-descriptions-item>
+      <el-descriptions-item label="应付金额" label-align="right" align="center">
+        {{ order.number * order.product.price }}
+      </el-descriptions-item>
+      <el-descriptions-item label="订单状态" label-align="right" align="center">
+        {{ order.status }}
+      </el-descriptions-item>
+
+      <el-descriptions-item
+        label="收货人姓名"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.name }}
+      </el-descriptions-item>
+      <el-descriptions-item
+        label="收货人电话"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.phone }}
+      </el-descriptions-item>
+      <el-descriptions-item
+        label="收货人地址"
+        label-align="right"
+        align="center"
+      >
+        {{ order.buyerInfo.place }}
+      </el-descriptions-item>
+    </el-descriptions>
+  </template>
 </template>
 
-<style scoped>
-el-col {
-  text-align: center;
-}
-.hover-zoom {
-  width: auto;
-  height: auto;
-}
-.hover-zoom:hover {
-  transform: scale(1.05);
-  transition: all 0.3s ease-in-out;
-}
-.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
+<style scoped></style>

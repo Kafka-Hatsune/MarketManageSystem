@@ -13,12 +13,12 @@ import {
   UploadFilled,
   HomeFilled
 } from '@element-plus/icons-vue'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
 import { useUserStore } from '@/stores'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { permissionJudgeAdminService } from '@/api/permission'
+
 // 组件
 import CurrentTime from '@/components/timer/Clock.vue'
 
@@ -123,13 +123,13 @@ const askPermissionForAdmin = async () => {
           </el-menu-item>
         </el-sub-menu>
 
-        <el-sub-menu index="/product">
+        <el-sub-menu index="/order">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
             <el-icon>
               <Goods />
             </el-icon>
-            <span>订单管理(beta)</span>
+            <span>订单管理</span>
           </template>
 
           <!-- 展开的内容 - 默认插槽 -->

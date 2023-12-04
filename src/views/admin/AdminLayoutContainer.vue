@@ -8,15 +8,13 @@ import {
   SwitchButton,
   CaretBottom,
   Goods,
-  ShoppingTrolley,
-  StarFilled,
   UploadFilled,
   HomeFilled
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
 import { useUserStore } from '@/stores'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 // 组件
