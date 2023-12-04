@@ -75,44 +75,36 @@ const handleCommand = async (key) => {
       >
         <!-- el-menu-item 菜单项
           index="/article/channel" 配置的是访问的跳转路径，配合default-active的值，实现高亮 -->
-        <el-menu-item index="/home">
+        <el-menu-item index="/admin/home">
           <el-icon><HomeFilled /></el-icon>
-          <span>主页</span>
+          <span>管理员主页</span>
         </el-menu-item>
 
-        <el-sub-menu index="/product">
+        <el-sub-menu index="/admin/user">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
             <el-icon><Goods /></el-icon>
-            <span>商品管理</span>
+            <span>用户管理</span>
           </template>
 
           <!-- 展开的内容 - 默认插槽 -->
-          <el-menu-item index="/product/new">
+          <el-menu-item index="/admin/user/new">
             <el-icon><Promotion /></el-icon>
-            <span>发布新商品</span>
+            <span>新增用户</span>
           </el-menu-item>
-          <el-menu-item index="/product/posted">
+          <el-menu-item index="/admin/user/list">
             <el-icon><UploadFilled /></el-icon>
-            <span>我的已发布商品</span>
-          </el-menu-item>
-          <el-menu-item index="/product/star">
-            <el-icon><StarFilled /></el-icon>
-            <span>收藏夹</span>
-          </el-menu-item>
-          <el-menu-item index="/product/cart">
-            <el-icon><ShoppingTrolley /></el-icon>
-            <span>购物车</span>
+            <span>用户列表</span>
           </el-menu-item>
         </el-sub-menu>
 
-        <el-menu-item index="/user/profile">
+        <el-menu-item index="/admin/order">
           <el-icon><UserFilled /></el-icon>
-          <span>个人中心</span>
+          <span>订单管理</span>
         </el-menu-item>
-        <el-menu-item @click="handleCommand('logout')">
+        <el-menu-item index="/home">
           <el-icon><SwitchButton /></el-icon>
-          <span>退出登陆</span>
+          <span>退出管理员页面</span>
         </el-menu-item>
       </el-menu>
     </el-aside>

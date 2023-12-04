@@ -13,12 +13,12 @@ import {
   UploadFilled,
   HomeFilled
 } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import avatar from '@/assets/user/default.png'
 import { useUserStore } from '@/stores'
 import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-
+import { permissionJudgeAdminService } from '@/api/permission'
 // 组件
 import CurrentTime from '@/components/timer/Clock.vue'
 
@@ -56,6 +56,11 @@ const handleCommand = async (key) => {
     router.push(`/user/${key}`)
   }
 }
+
+const askPermissionForAdmin = async () => {
+  // 放在路由守卫中判断权限
+  router.push('/admin/home')
+}
 </script>
 
 <template>
@@ -76,32 +81,44 @@ const handleCommand = async (key) => {
         <!-- el-menu-item 菜单项
           index="/article/channel" 配置的是访问的跳转路径，配合default-active的值，实现高亮 -->
         <el-menu-item index="/home">
-          <el-icon><HomeFilled /></el-icon>
+          <el-icon>
+            <HomeFilled />
+          </el-icon>
           <span>主页</span>
         </el-menu-item>
 
         <el-sub-menu index="/product">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
-            <el-icon><Goods /></el-icon>
+            <el-icon>
+              <Goods />
+            </el-icon>
             <span>商品管理</span>
           </template>
 
           <!-- 展开的内容 - 默认插槽 -->
           <el-menu-item index="/product/new">
-            <el-icon><Promotion /></el-icon>
+            <el-icon>
+              <Promotion />
+            </el-icon>
             <span>发布新商品</span>
           </el-menu-item>
           <el-menu-item index="/product/posted">
-            <el-icon><UploadFilled /></el-icon>
+            <el-icon>
+              <UploadFilled />
+            </el-icon>
             <span>我的已发布商品</span>
           </el-menu-item>
           <el-menu-item index="/product/star">
-            <el-icon><StarFilled /></el-icon>
+            <el-icon>
+              <StarFilled />
+            </el-icon>
             <span>收藏夹</span>
           </el-menu-item>
           <el-menu-item index="/product/cart">
-            <el-icon><ShoppingTrolley /></el-icon>
+            <el-icon>
+              <ShoppingTrolley />
+            </el-icon>
             <span>购物车</span>
           </el-menu-item>
         </el-sub-menu>
@@ -109,27 +126,43 @@ const handleCommand = async (key) => {
         <el-sub-menu index="/product">
           <!-- 多级菜单的标题 - 具名插槽 title -->
           <template #title>
-            <el-icon><Goods /></el-icon>
+            <el-icon>
+              <Goods />
+            </el-icon>
             <span>订单管理(beta)</span>
           </template>
-        
+
           <!-- 展开的内容 - 默认插槽 -->
           <el-menu-item index="/order/consumer">
-            <el-icon><Promotion /></el-icon>
+            <el-icon>
+              <Promotion />
+            </el-icon>
             <span>我的购买</span>
           </el-menu-item>
           <el-menu-item index="/order/seller">
-            <el-icon><UploadFilled /></el-icon>
+            <el-icon>
+              <UploadFilled />
+            </el-icon>
             <span>我的卖出</span>
           </el-menu-item>
         </el-sub-menu>
 
         <el-menu-item index="/user/profile">
-          <el-icon><UserFilled /></el-icon>
+          <el-icon>
+            <UserFilled />
+          </el-icon>
           <span>个人中心</span>
         </el-menu-item>
+        <el-menu-item @click="askPermissionForAdmin">
+          <el-icon>
+            <UserFilled />
+          </el-icon>
+          <span>管理员页面</span>
+        </el-menu-item>
         <el-menu-item @click="handleCommand('logout')">
-          <el-icon><SwitchButton /></el-icon>
+          <el-icon>
+            <SwitchButton />
+          </el-icon>
           <span>退出登陆</span>
         </el-menu-item>
       </el-menu>
@@ -141,7 +174,9 @@ const handleCommand = async (key) => {
         <el-col :span="8"></el-col>
         <el-col :span="8"></el-col>
         <el-col :span="4">
-          <div><CurrentTime></CurrentTime></div>
+          <div>
+            <CurrentTime></CurrentTime>
+          </div>
         </el-col>
         <el-col :span="3">
           {{ userStore.user.userName }} : {{ greeting }}
@@ -151,7 +186,9 @@ const handleCommand = async (key) => {
             <!-- 展示给用户，默认看到的 -->
             <span class="el-dropdown__box">
               <el-avatar :src="userStore.user.avatar || avatar" />
-              <el-icon><CaretBottom /></el-icon>
+              <el-icon>
+                <CaretBottom />
+              </el-icon>
             </span>
 
             <!-- 折叠的下拉部分 -->
@@ -187,24 +224,30 @@ const handleCommand = async (key) => {
 <style lang="scss" scoped>
 .layout-container {
   height: 100vh;
+
   .el-aside {
     background-color: #232323;
+
     &__logo {
       height: 120px;
       background: url('@/assets/logo.png') no-repeat center / 120px auto;
     }
+
     .el-menu {
       border-right: none;
     }
   }
+
   .el-header {
     background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
     .el-dropdown__box {
       display: flex;
       align-items: center;
+
       .el-icon {
         color: #999;
         margin-left: 10px;
@@ -216,6 +259,7 @@ const handleCommand = async (key) => {
       }
     }
   }
+
   .el-footer {
     display: flex;
     align-items: center;

@@ -34,3 +34,16 @@ export const userSetDefaultRecInfoService = ({ id }) =>
 // 更新用户密码
 export const userUpdatePasswordService = ({ old_pwd, new_pwd, re_pwd }) =>
   request.patch('/my/updatepwd', { old_pwd, new_pwd, re_pwd })
+
+// 上传用户清单批量添加用户
+export const userUploadExcelService = (file) =>
+  request.post('/admin/users/new', file, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+
+// 获取所有用户信息(管理员)
+export const userGetAllUserService = () => request.get('/admin/user/all')
+
+// 删除用户(管理员)
+export const userDeleteUserService = ({ userName }) =>
+  request.post('/admin/user/delete', { userName })
