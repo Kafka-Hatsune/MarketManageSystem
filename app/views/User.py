@@ -214,3 +214,44 @@ class AddRecInfor(APIView):
             code, message = 200, '添加成功'
         return Response({'code': code, 'message': message})
 
+
+class GetDefaultRecInfor(APIView):
+    def get(self, request):
+        token = get_header_token(request)
+        data = None
+        if not decode_token(token):
+            code, message = -1, '登录超时或者其他原因导致token失效'
+        else:
+            userName = decode_token(token)['username']
+            user = User.objects.get(name=userName)
+            ui = user.currentInfo
+            if ui:
+                data = {
+                    'id': ui.id,
+                    'name': ui.name,
+                    'phone': ui.phone,
+                    'place': ui.place
+                }
+            code, message = 200, '获取默认收货地址成功'
+        return Response({'code': code, 'message': message, 'data': data})
+
+
+class GetAllRecInfors(APIView):
+    def get(self, request):
+        token = get_header_token(request)
+        data = []
+        if not decode_token(token):
+            code, message = -1, '登录超时或者其他原因导致token失效'
+        else:
+            userName = decode_token(token)['username']
+            user = User.objects.get(name=userName)
+            userInfo_list_raw = UserInfo.objects.filter(user=user)
+            for ui in userInfo_list_raw:
+                data.append({
+                    'id': ui.id,
+                    'name': ui.name,
+                    'phone': ui.phone,
+                    'place': ui.place
+                })
+            code, message = 200, '获取所有收货地址成功'
+        return Response({'code': code, 'message': message, 'data': data})

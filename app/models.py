@@ -17,6 +17,11 @@ class User(models.Model):
     currentInfo = models.ForeignKey('UserInfo', on_delete=models.CASCADE, null=True, blank=True,
                                     related_name='current')
     avatar = models.ForeignKey('Images', null=True, on_delete=models.SET_NULL, default=None)
+    register_time = models.DateTimeField(auto_now_add=True)
+
+    def get_register_time(self):
+        time = self.register_time.strftime('%Y-%m-%d %H:%M:%S')
+        return time
 
     class Meta:
         db_table = 'users'  # 指明数据库表名
@@ -104,12 +109,18 @@ class Cart(models.Model):
 
 
 class Order(models.Model):
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
-    # seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    buyer = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
+    product = models.ForeignKey(Product, models.SET_NULL, blank=True, null=True)
+    buyer_name = models.CharField(max_length=NAME_LEN)
+    product_name = models.CharField(max_length=PRODUCT_MAME_LEN)
+    seller_name = models.CharField(max_length=NAME_LEN)
     number = models.IntegerField()
     create_time = models.DateTimeField(auto_now_add=True)
-    # status = models.CharField()
+    status = models.CharField(max_length=20, default="ToBeShipped")
+    price = models.IntegerField()
+    receiver_name = models.CharField(max_length=NAME_LEN, verbose_name='收货人姓名', default="")
+    receiver_phone = models.CharField(max_length=PHONE_LEN, verbose_name='收货人手机号', default="")
+    receiver_place = models.CharField(max_length=PLACE_LEN, verbose_name='收货地址', default="")
 
     def get_create_time(self):
         time = self.create_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -119,7 +130,7 @@ class Order(models.Model):
         db_table = 'order'
 
     def __str__(self):
-        return self.buyer, self.product
+        return self.buyer_name, self.product_name
 
 
 class Comment(models.Model):

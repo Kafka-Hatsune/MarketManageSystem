@@ -255,7 +255,14 @@ class PurchaseProduct(APIView):
                     product.sale += count_to_buy
                     product.save()
                     # 创建订单
-                    o = Order.objects.create(buyer=user, product=product, number=count_to_buy)
+                    o = Order.objects.create(buyer=user, product=product, number=count_to_buy,
+                                             buyer_name=userName,
+                                             product_name=product.product_name,
+                                             seller_name=product.publisher.name,
+                                             price=product.price,
+                                             receiver_name=user.currentInfo.name,
+                                             receiver_phone=user.currentInfo.phone,
+                                             receiver_place=user.currentInfo.place)
                     o.save()
                     code, message = 200, '购买成功'
             except Product.DoesNotExist:

@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from django.views.static import serve
-# from app.views import LoginView, RegisterView, LogoutView, UserInfoView
-from app.views import User, Product
+
+from app.views import User, Product, Util, Order, Administractor
 from app import views, utils
 from backend import settings
 
@@ -14,6 +14,8 @@ urlpatterns = [
     path("user/basicInfor/update", User.BasicInfoUpdate.as_view()),
     path("user/defaultRecInfor/update", User.DefaultRecInforUpdate.as_view()),
     path("user/recInfor/new", User.AddRecInfor.as_view()),
+    path("user/recInfor/default", User.GetDefaultRecInfor.as_view()),
+    path("user/recInfors", User.GetAllRecInfors.as_view()),
 
     # product
     path("products", Product.GetAllProducts.as_view()),
@@ -37,6 +39,23 @@ urlpatterns = [
     path("product/cart/delete", Product.DeleteProductFromCart.as_view()),
     path("product/cart/select", Product.ProductCartSelect.as_view()),
     path("product/cart/modify", Product.CartModify.as_view()),
+
+    # 订单
+    path("order/consumer", Order.GetPurchaseOrder.as_view()),
+    path("order/seller", Order.GetSellOrder.as_view()),
+    path("order/state/modify", Order.OrderStateModify.as_view()),
+
+    # 管理员
+    path("administractor/permission", Administractor.GetIfAdmin.as_view()),
+    path("administractor/user/all", Administractor.GetAllUsers.as_view()),
+    path("administractor/order/all", Administractor.GetAllOrders.as_view()),
+    path("administractor/user/delete", Administractor.DeleteUser.as_view()),
+    path("administractor/order/delete", Administractor.DeleteOrder.as_view()),
+    path("administractor/users/new", Administractor.UploadUsers.as_view()),
+
+
+    # test
+    # path("uploadfile", Util.UploadFile.as_view()),
 
     # 访问图片
     re_path(r'media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
