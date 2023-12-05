@@ -81,11 +81,11 @@ class AddProductComment(APIView):
 
 class GetAllProducts(APIView):
     def get(self, request):
-        code, message = 200, ''        # 不检测token也可以吧
+        code, message = 200, ''  # 不检测token也可以吧
         product_list = []
         product_list_raw = Product.objects.all()
         for p in product_list_raw:
-            if p.stock == 0:            # 不get库存为0的商品
+            if p.stock == 0:  # 不get库存为0的商品
                 continue
             product_list.append(getProductData(p))
         return Response({'code': code, 'message': message, 'data': product_list})
@@ -284,7 +284,8 @@ class GetProductsInCart(APIView):
                 data.append({
                     'productId': c.product.id,
                     'productName': c.product.product_name,
-                    'productPic': ProductImages.objects.filter(product=c.product)[0].img.get_url(),
+                    'productPic': None if not ProductImages.objects.filter(product=c.product)
+                    else ProductImages.objects.filter(product=c.product)[0],
                     'price': c.product.price,
                     'count': c.count,
                     'stock': c.product.stock,
@@ -330,7 +331,7 @@ class DeleteProductFromCart(APIView):
             user = User.objects.get(name=userName)
             productId = request.data.get('productId')
             try:
-                c = Cart.objects.get(user=user, product_id=productId)   # product_id的用法可以吗
+                c = Cart.objects.get(user=user, product_id=productId)  # product_id的用法可以吗
                 c.delete()
                 code, message = 200, '从购物车删除商品成功'
             except Cart.DoesNotExist:
@@ -379,5 +380,3 @@ class CartModify(APIView):
             except Cart.DoesNotExist:
                 code, message = -3, '购物车中不存在该商品'
         return Response({'code': code, 'message': message})
-
-
