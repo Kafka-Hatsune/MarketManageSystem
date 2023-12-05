@@ -249,6 +249,8 @@ class PurchaseProduct(APIView):
                 stock = product.stock
                 if count_to_buy > stock:
                     code, message = -3, '购买失败，购买商品数大于库存'
+                elif user.currentInfo is None:
+                    code, message = -4, '购买失败，请先设置默认收货地址'
                 else:
                     # 修改商品信息
                     product.stock -= count_to_buy
