@@ -287,7 +287,7 @@ class GetProductsInCart(APIView):
                     'productId': c.product.id,
                     'productName': c.product.product_name,
                     'productPic': None if not ProductImages.objects.filter(product=c.product)
-                    else ProductImages.objects.filter(product=c.product)[0],
+                    else ProductImages.objects.filter(product=c.product)[0].img.get_url(),
                     'price': c.product.price,
                     'count': c.count,
                     'stock': c.product.stock,
