@@ -211,7 +211,7 @@ const callDialog = async () => {
   background-position: center center;
   background-repeat: no-repeat;
   width: 100%;
-  height: 300px;
+  height: 100%;
   background-size: cover;
 }
 .title {

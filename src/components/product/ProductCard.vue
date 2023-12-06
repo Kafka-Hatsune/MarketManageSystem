@@ -19,7 +19,10 @@ const jump2Details = (key) => {
     @click.stop="jump2Details(props.product.productId)"
     class="hover-zoom"
   >
-    <img :src="props.product.productPic[0] || defaultPic" class="image" />
+    <el-image
+      :src="props.product.productPic[0] || defaultPic"
+      style="width: 100%; height: 200px"
+    />
     <div style="padding: 14px">
       <h1>{{ props.product.productName }}</h1>
       <div class="price">
@@ -58,10 +61,6 @@ const jump2Details = (key) => {
 .price2 {
   color: rgb(255, 80, 0);
   font-size: large;
-}
-.image {
-  width: 250px;
-  height: 250px;
 }
 
 .time {

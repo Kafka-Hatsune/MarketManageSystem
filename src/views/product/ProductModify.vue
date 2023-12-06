@@ -63,13 +63,13 @@ const onSubmit = async () => {
   <el-form label-width="100px" style="max-width: 650px">
     <!-- 图片相关 -->
     <el-form-item label="商品图片">
-      <div v-if="image in imgUrls">
-        <img
+      <div v-if="imgUrls.length > 0">
+        <el-image
           v-for="image in imgUrls"
           :src="image"
           :key="image"
-          width="200"
-          height="200"
+          width="100%"
+          height="100%"
         />
       </div>
       <div v-else>
@@ -77,7 +77,7 @@ const onSubmit = async () => {
           v-for="productPic in productStore.product.productPic"
           :key="productPic"
           :src="productPic"
-          width="200"
+          width="100%"
           height="200"
         />
       </div>

@@ -58,12 +58,12 @@ const onSubmit = async () => {
     <!-- 图片相关 -->
     <el-form-item label="商品图片">
       <div>
-        <img
+        <el-image
           v-for="image in imgUrls"
           :src="image"
           :key="image"
-          width="200"
-          height="200"
+          width="100%"
+          height="100%"
         />
       </div>
       <input type="file" multiple @change="previewImages($event)" />

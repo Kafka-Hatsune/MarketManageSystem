@@ -74,7 +74,7 @@ console.log('--------------------------------')
       >
         <el-image
           :src="product.productPic[0]"
-          style="width: 200px; height: 200px"
+          style="width: 100%; height: 200px"
         />
         <div style="padding: 14px">
           <span>{{ product.productName }}</span>
