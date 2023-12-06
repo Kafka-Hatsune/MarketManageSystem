@@ -65,6 +65,11 @@ class GetAllOrders(APIView):
                             # 'avatar': None if not o.buyer.avatar else o.buyer.avatar.get_url(),
                             # 'email': o.buyer.email
                         },
+                        'seller': {
+                            'userName': o.seller_name,
+                            # 'avatar': None if not o.buyer.avatar else o.buyer.avatar.get_url(),
+                            # 'email': o.buyer.email
+                        },
                         'product': {
                             'productName': o.product_name,
                             'price': o.price,
