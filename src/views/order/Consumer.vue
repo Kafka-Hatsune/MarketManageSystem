@@ -21,6 +21,13 @@ const changeState = async (id, state) => {
 const showType = ref('已完成')
 </script>
 <template>
+  <!-- {{ orderStore.orderConsumerList }}
+  <hr />
+  {{
+    orderStore.orderConsumerList.filter(
+      (element) => element.status === 'Completed'
+    )
+  }} -->
   <div>
     <el-radio-group v-model="showType" size="large">
       <el-radio-button label="已完成" />
@@ -28,7 +35,17 @@ const showType = ref('已完成')
     </el-radio-group>
   </div>
   <template v-if="showType === '已完成'">
+    <div
+      v-if="
+        orderStore.orderConsumerList.filter(
+          (element) => element.status === 'Completed'
+        ).length == 0
+      "
+    >
+      您没有已完成的订单
+    </div>
     <el-descriptions
+      v-else
       :column="3"
       v-for="order in orderStore.orderConsumerList.filter(
         (element) => element.status === 'Completed'
@@ -37,14 +54,6 @@ const showType = ref('已完成')
       :title="`您于${order.createdTime}创建的订单`"
       border
     >
-      <el-descriptions-item
-        label="卖家用户名"
-        label-align="right"
-        align="center"
-        width="150px"
-        >{{ order.seller.userName }}</el-descriptions-item
-      >
-
       <el-descriptions-item label="商品名" label-align="right" align="center">
         {{ order.product.productName }}
       </el-descriptions-item>
@@ -86,6 +95,7 @@ const showType = ref('已完成')
     </el-descriptions>
   </template>
   <template v-else-if="showType === '未完成'">
+    <p>若未发货,请等待卖家与您提供的手机号联系并发货</p>
     <el-descriptions
       :column="3"
       v-for="order in orderStore.orderConsumerList.filter(
@@ -100,13 +110,6 @@ const showType = ref('已完成')
           >设为已收货</el-button
         >
       </template>
-      <el-descriptions-item
-        label="卖家用户名"
-        label-align="right"
-        align="center"
-        width="150px"
-        >{{ order.seller.userName }}</el-descriptions-item
-      >
 
       <el-descriptions-item label="商品名" label-align="right" align="center">
         {{ order.product.productName }}

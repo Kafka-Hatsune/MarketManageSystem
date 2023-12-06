@@ -6,8 +6,6 @@ import { useUserStore } from '@/stores'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 const userStore = useUserStore()
-const userRecInfors = userStore.user.recInfors
-const userCurInfor = userStore.user.recInfor
 // 新建收货信息
 import {
   userCreateRecInfoService,
@@ -26,54 +24,90 @@ const form = ref({
 const submitNewRecInforForm = async () => {
   // 关闭对话框表单
   dialogFormVisible.value = false
-  // 提交修改
+
   await userCreateRecInfoService(form.value)
-  // 通知 user 模块，进行数据的更新
-  userStore.getUser()
+  await userStore.getCurRecInfor()
+  await userStore.getAllRecInfor()
   // 提示用户
   ElMessage.success('新建成功')
 }
 // 设置默认地址
 const setDefaultRecInfor = async (id) => {
-  await userSetDefaultRecInfoService(id)
+  await userSetDefaultRecInfoService({ id })
+  await userStore.getCurRecInfor()
+  await userStore.getAllRecInfor()
 }
 </script>
 <template>
   <h2>用户收货信息</h2>
   <el-button @click="dialogFormVisible = true">新建收货信息</el-button>
-  <template v-if="userRecInfors === null"> 当前没有收货信息,去新建 </template>
-  <template v-else-if="userCurInfor === null">
-    当前没有设置默认收货信息,去设置
-  </template>
-  <template v-else>
-    <el-scrollbar height="400px">
-      <div
-        v-for="recInfor in userRecInfors"
-        :key="recInfor"
-        class="scrollbar-demo-item"
+  <div v-if="userStore.recInforList === null">当前没有收货信息,去新建</div>
+  <hr />
+  <div v-if="userStore.curRecInfor">
+    <el-descriptions title="用户当前默认收货信息">
+      <el-descriptions-item label="收货人姓名">{{
+        userStore.curRecInfor.name
+      }}</el-descriptions-item>
+      <el-descriptions-item label="收货人电话">{{
+        userStore.curRecInfor.phone
+      }}</el-descriptions-item>
+      <el-descriptions-item label="收货地址">
+        {{ userStore.curRecInfor.place }}</el-descriptions-item
       >
-        <div v-if="recInfor !== userCurInfo">
-          <span>{{ recInfor.name }}</span>
-          <span>{{ recInfor.phone }}</span>
-          <br />
-          {{ recInfor.place }}
-        </div>
-        <div v-else class="">
-          <span>{{ recInfor.name }}</span>
-          <span>{{ recInfor.phone }}</span>
-          <br />
-          {{ recInfor.place }}
-        </div>
-        <el-button
-          v-if="recInfor !== userCurInfo"
-          class="rightButton"
-          @click="setDefaultRecInfor(recInfor.id)"
-        >
+    </el-descriptions>
+  </div>
+  <div height="400px" v-else>当前没有设置默认收货信息,去设置</div>
+  <h2>您的其他收货地址</h2>
+  <!-- 存在curRecInfor时的行为 -->
+  <div v-if="userStore.curRecInfor">
+    <el-tabs tab-position="left" style="height: 200px" class="demo-tabs">
+      <el-tab-pane
+        v-for="infor in userStore.recInforList.filter(
+          (item) => item.id !== userStore.curRecInfor.id
+        )"
+        :key="infor"
+        label="收货地址"
+        ><el-descriptions title="">
+          <el-descriptions-item label="收货人姓名">{{
+            infor.name
+          }}</el-descriptions-item>
+          <el-descriptions-item label="收货人电话">{{
+            infor.phone
+          }}</el-descriptions-item>
+          <el-descriptions-item label="收货地址">
+            {{ infor.place }}</el-descriptions-item
+          >
+        </el-descriptions>
+        <el-button class="rightButton" @click="setDefaultRecInfor(infor.id)">
           设置为默认地址
         </el-button>
-      </div>
-    </el-scrollbar>
-  </template>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+  <!-- 不存在recInfor的行为 -->
+  <div v-else>
+    <el-tabs tab-position="left" style="height: 200px" class="demo-tabs">
+      <el-tab-pane
+        v-for="infor in userStore.recInforList"
+        :key="infor"
+        label="收货地址"
+        ><el-descriptions title="">
+          <el-descriptions-item label="收货人姓名">{{
+            infor.name
+          }}</el-descriptions-item>
+          <el-descriptions-item label="收货人电话">{{
+            infor.phone
+          }}</el-descriptions-item>
+          <el-descriptions-item label="收货地址">
+            {{ infor.place }}</el-descriptions-item
+          >
+        </el-descriptions>
+        <el-button class="rightButton" @click="setDefaultRecInfor(infor.id)">
+          设置为默认地址
+        </el-button>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
   <!-- 新建收货信息表单 -->
   <el-dialog v-model="dialogFormVisible" title="新建收货信息">
     <el-form :model="form">

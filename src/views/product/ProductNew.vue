@@ -10,7 +10,7 @@ onMounted(() => {
 })
 
 const imgUrls = new ref([])
-let files = new ref()
+let files = new ref([])
 const previewImages = (event) => {
   imgUrls.value = []
   files = event.target.files
@@ -30,21 +30,21 @@ const typeValue = ref('')
 const price = ref()
 const description = ref()
 const stock = ref()
+// 经过验证 files为值
 const onSubmit = async () => {
-  console.log(
-    typeValue.value,
-    name.value,
-    price.value,
-    description.value,
-    stock.value
-  )
+  console.log('这是files')
+  console.log(files)
+  console.log('这是value')
+  console.log(files.length)
   let formData = new FormData()
-  formData.append('productPic', files)
-  formData.append('typeName', typeValue)
-  formData.append('productName', name)
-  formData.append('price', price)
-  formData.append('description', description)
-  formData.append('stock', stock)
+  for (let i = 0; i < files.length; i++) {
+    formData.append('productPic', files[i])
+  }
+  formData.append('typeName', typeValue.value)
+  formData.append('productName', name.value)
+  formData.append('price', price.value)
+  formData.append('description', description.value)
+  formData.append('stock', stock.value)
   await productCreateService(formData)
   // 提示用户
   ElMessage.success('成功发布商品')

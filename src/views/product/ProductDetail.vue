@@ -1,5 +1,5 @@
 <script setup>
-import { useProductStore } from '@/stores'
+import { useProductStore, useUserStore } from '@/stores'
 import { onMounted, ref, toRef } from 'vue'
 import { commentSubmitService } from '@/api/comment'
 import {
@@ -17,6 +17,7 @@ onMounted(() => {
   productStore.getProduct(routeId)
   productStore.checkIfStarred(routeId)
   productStore.checkIfCart(routeId)
+  userStore.getCurRecInfor()
 })
 const productId = toRef(routeId)
 const commentText = ref()
@@ -27,6 +28,7 @@ const submitCommentForm = ref({
 const submitComment = async () => {
   await commentSubmitService(submitCommentForm.value)
   ElMessage.success('创建评论成功')
+  await productStore.getProduct(routeId)
 }
 const count = ref(1)
 const submitPurchaseForm = ref({
@@ -36,6 +38,8 @@ const submitPurchaseForm = ref({
 const submitPurchase = async () => {
   console.log(submitPurchaseForm.value)
   await productPurchaseService(submitPurchaseForm.value)
+  ElMessage.success('成功创建订单')
+  dialogFormVisible.value = false
 }
 const switchStar = async () => {
   await productStarNewService(routeId)
@@ -43,14 +47,25 @@ const switchStar = async () => {
 }
 const submitCart = async (productId, count) => {
   await productCartNewService({ productId, count })
+  await productStore.checkIfCart(routeId)
 }
 const submitDelete = async (productId) => {
   await productCartDeleteService(productId)
   router.go(0)
 }
+const userStore = useUserStore()
+const dialogFormVisible = ref(false)
+const callDialog = async () => {
+  console.log(dialogFormVisible)
+  await userStore.getCurRecInfor()
+  dialogFormVisible.value = true
+  console.log(dialogFormVisible)
+  // await userStore.getCurRecInfor()
+}
 </script>
 <template>
   <!-- {{ productStore.productIfStar }} -->
+
   <el-row>
     <el-col :span="16">
       <el-row>
@@ -153,11 +168,40 @@ const submitDelete = async (productId) => {
           >
         </li>
         <li class="li-message">
-          <el-button @click="submitPurchase"> 购买 </el-button>
+          <el-button @click="callDialog()"> 购买</el-button>
+          <!-- <el-button @click="submitPurchase"> 购买 </el-button> -->
         </li>
       </ul>
     </el-col>
   </el-row>
+  <!-- 确认购买对话框 -->
+  <el-dialog v-model="dialogFormVisible" title="请确认收货信息">
+    <el-form :model="form" v-if="userStore.curRecInfor">
+      <el-form-item label="收货人姓名" :label-width="formLabelWidth">
+        <el-input v-model="userStore.curRecInfor.name" disabled />
+      </el-form-item>
+      <el-form-item label="收货人电话" :label-width="formLabelWidth">
+        <el-input v-model="userStore.curRecInfor.phone" placeholder disabled />
+      </el-form-item>
+      <el-form-item label="收货人地址" :label-width="formLabelWidth">
+        <el-input v-model="userStore.curRecInfor.place" placeholder disabled />
+      </el-form-item>
+    </el-form>
+    <div v-else>快去设置你的收货地址</div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button
+          v-if="userStore.curRecInfor"
+          type="primary"
+          @click="submitPurchase"
+        >
+          确认购买
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <style scoped>
 .carousel {

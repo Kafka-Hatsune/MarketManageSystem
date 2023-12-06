@@ -44,12 +44,12 @@ const onSubmit = async () => {
   )
   let formData = new FormData()
   formData.append('productId', productStore.product.productId)
-  formData.append('productPic', files)
-  formData.append('typeName', typeValue)
-  formData.append('productName', name)
-  formData.append('price', price)
-  formData.append('description', description)
-  formData.append('stock', stock)
+  formData.append('productPic', files.value)
+  formData.append('typeName', typeValue.value)
+  formData.append('productName', name.value)
+  formData.append('price', price.value)
+  formData.append('description', description.value)
+  formData.append('stock', stock.value)
   await productModifyService(formData)
   // 提示用户
   ElMessage.success('成功修改商品')
@@ -73,11 +73,12 @@ const onSubmit = async () => {
         />
       </div>
       <div v-else>
-        <img
+        <el-image
           v-for="productPic in productStore.product.productPic"
           :key="productPic"
           :src="productPic"
-          class="img"
+          width="200"
+          height="200"
         />
       </div>
       <input type="file" multiple @change="previewImages($event)" />

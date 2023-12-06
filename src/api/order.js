@@ -6,7 +6,7 @@ export const orderGetSeller = () => request.get('/order/seller')
 export const orderGetConsumer = () => request.get('/order/consumer')
 
 // 获取所有订单信息
-export const orderGetAllService = () => request.get('/admin/order/all')
+export const orderGetAllService = () => request.get('/administractor/order/all')
 
 // 修改订单状态
 export const orderChangeStateService = ({ id, state }) =>
@@ -14,4 +14,4 @@ export const orderChangeStateService = ({ id, state }) =>
 
 // 管理员删除订单
 export const orderDeleteOrderService = ({ id }) =>
-  request.post('/admin/order/delete', { id })
+  request.post('/administractor/order/delete', { id })

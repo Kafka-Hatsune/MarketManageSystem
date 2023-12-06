@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores'
 import { userUpdateInfoService } from '@/api/user'
 import { ElMessage } from 'element-plus'
@@ -9,6 +9,11 @@ import PageContainer from '@/components/PageContainer.vue'
 import RecInforDisplayer from '@/components/user/RecInforDisplayer.vue'
 
 const formRef = ref()
+const userStore = useUserStore()
+onMounted(() => {
+  userStore.getCurRecInfor()
+  userStore.getAllRecInfor()
+})
 
 // 是在使用仓库中数据的初始值 (无需响应式) 解构无问题
 const {

@@ -76,7 +76,7 @@ const askPermissionForAdmin = async () => {
         router router选项开启，el-menu-item 的 index 就是点击跳转的路径 -->
       <el-menu
         active-text-color="#ffd04b"
-        background-color="#232323"
+        background-color="#2a5b87"
         :default-active="$route.path"
         text-color="#fff"
         router
@@ -229,7 +229,8 @@ const askPermissionForAdmin = async () => {
   height: 100vh;
 
   .el-aside {
-    background-color: #232323;
+    // background-color: #d8aeb0;
+    background-color: #2a5b87;
 
     &__logo {
       height: 120px;

@@ -34,7 +34,17 @@ const showType = ref('已完成')
     </el-radio-group>
   </div>
   <template v-if="showType === '已完成'">
+    <div
+      v-if="
+        orderStore.orderSellerList.filter(
+          (element) => element.status === 'Completed'
+        ).length == 0
+      "
+    >
+      您没有已完成的订单
+    </div>
     <el-descriptions
+      v-else
       :column="3"
       v-for="order in orderStore.orderSellerList.filter(
         (element) => element.status === 'Completed'

@@ -35,11 +35,11 @@ export const productGetStarService = () => request.get('/product/star')
 
 // 用户切换收藏商品的状态
 export const productStarNewService = (id) =>
-  request.post('/product/star/switch', { id })
+  request.post('/product/star/switch', { productId: id })
 
 // 查询用户是否收藏该商品
 export const productIfStarService = (id) =>
-  request.post('/product/star/select', { id })
+  request.post('/product/star/select', { productId: id })
 
 // 获取用户购物车中所有商品信息
 export const productGetCartService = () => request.get('/product/cart')
