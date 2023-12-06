@@ -1,19 +1,29 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useProductStore } from '@/stores'
+import { useProductStore, useStatisticStore } from '@/stores'
 
 // 组件
 import HomeStatistic from '@/components/statistic/HomeStatistic.vue'
 import ProductCard from '@/components/product/ProductCard.vue'
 const productStore = useProductStore()
+const statisticStore = useStatisticStore()
 onMounted(() => {
   productStore.getProducts()
+  statisticStore.getActiveUserCount()
+  statisticStore.getProductCount()
+  statisticStore.getCommentCount()
+  statisticStore.getActiveOrderCount()
 })
 </script>
 <template>
   <div class="common-layout">
     <el-container>
-      <HomeStatistic></HomeStatistic>
+      <HomeStatistic
+        :activeUser="statisticStore.activeUserCount"
+        :weeklyTrans="statisticStore.activeOrderCount"
+        :productNum="statisticStore.productCount"
+        :commentCount="statisticStore.commentCount"
+      ></HomeStatistic>
       <br />
       <el-header>猜你喜欢</el-header>
       <el-main style="margin-left: 1%; margin-right: 1%">

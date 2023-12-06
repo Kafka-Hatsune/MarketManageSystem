@@ -59,3 +59,6 @@ export const productCartDeleteService = (productId) =>
 // 查询用户购物车中是否存在该商品
 export const productCartSelectService = (productId) =>
   request.post('/product/cart/select', { productId })
+
+// 用户结算自己的购物车
+export const productCartSettleService = () => request.get('/cart/update/all')

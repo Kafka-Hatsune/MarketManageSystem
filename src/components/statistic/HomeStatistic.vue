@@ -2,32 +2,37 @@
 defineOptions({
   name: 'HomeStatistic'
 })
-import { ChatLineRound, Male } from '@element-plus/icons-vue'
+const props = defineProps({
+  activeUser: Number,
+  weeklyTrans: Number,
+  productNum: Number,
+  commentCount: Number
+})
+import { ChatLineRound, Finished } from '@element-plus/icons-vue'
 </script>
 <template>
   <el-row>
     <el-col :span="2"></el-col>
     <el-col :span="5">
-      <el-statistic title="Daily active users" :value="268500" />
+      <el-statistic title="周活跃用户" :value="props.activeUser" />
     </el-col>
     <el-col :span="5">
-      <el-statistic :value="138">
+      <el-statistic :value="props.weeklyTrans">
         <template #title>
           <div style="display: inline-flex; align-items: center">
-            Ratio of men to women
+            周交易量
             <el-icon style="margin-left: 4px" :size="12">
-              <Male />
+              <Finished />
             </el-icon>
           </div>
         </template>
-        <template #suffix>/100</template>
       </el-statistic>
     </el-col>
     <el-col :span="5">
-      <el-statistic title="Total Transactions" :value="172000" />
+      <el-statistic title="当前在售商品数" :value="props.productNum" />
     </el-col>
     <el-col :span="5">
-      <el-statistic title="Feedback number" :value="562">
+      <el-statistic title="评论总数" :value="props.commentCount">
         <template #suffix>
           <el-icon style="vertical-align: -0.125em">
             <ChatLineRound />

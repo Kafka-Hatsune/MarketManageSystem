@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import defaultPic from '@/assets/product/defaultPic.png'
 defineOptions({
   name: 'ProductCard'
 })
@@ -18,9 +19,9 @@ const jump2Details = (key) => {
     @click.stop="jump2Details(props.product.productId)"
     class="hover-zoom"
   >
-    <img :src="props.product.productPic[0]" class="image" />
+    <img :src="props.product.productPic[0] || defaultPic" class="image" />
     <div style="padding: 14px">
-      <span>{{ props.product.ProductName }}</span>
+      <h1>{{ props.product.productName }}</h1>
       <div class="price">
         <span class="price1">¥</span
         ><span class="price2">{{ props.product.price }}</span>

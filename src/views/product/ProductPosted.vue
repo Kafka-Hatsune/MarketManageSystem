@@ -77,7 +77,7 @@ console.log('--------------------------------')
           style="width: 200px; height: 200px"
         />
         <div style="padding: 14px">
-          <span>{{ product.ProductName }}</span>
+          <span>{{ product.productName }}</span>
           <div class="price">
             <span class="price1">¥</span
             ><span class="price2">{{ product.price }}</span>

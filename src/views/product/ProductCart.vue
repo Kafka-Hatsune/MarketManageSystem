@@ -1,9 +1,10 @@
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useProductStore } from '@/stores'
 import {
   productCartCountService,
-  productCartDeleteService
+  productCartDeleteService,
+  productCartSettleService
 } from '@/api/product'
 import { ElMessage } from 'element-plus'
 import router from '../../router'
@@ -34,10 +35,22 @@ const submitDeleteAll = async () => {
   ElMessage.success('成功清空购物车')
   router.go(0)
 }
+const callDialog = async () => {
+  await productStore.getCartProducts()
+  dialogFormVisible.value = true
+}
+const dialogFormVisible = ref(false)
+
+const submitAllPurchase = async () => {
+  await productCartSettleService()
+  ElMessage.success('您的所有订单已创建成功')
+  await productStore.getCartProducts()
+}
 </script>
 <template>
   <span>共计 {{ sumPrice }}元</span>
   <el-button @click="submitDeleteAll">清空购物车</el-button>
+  <el-button @click="callDialog">结算购物车</el-button>
   <el-row :gutter="20">
     <el-col
       :span="6"
@@ -54,7 +67,7 @@ const submitDeleteAll = async () => {
           style="width: 200px; height: 200px"
         />
         <div style="padding: 14px">
-          <span>{{ product.ProductName }}</span>
+          <span>{{ product.productName }}</span>
           <div class="price">
             <span class="price1">¥</span
             ><span class="price2">{{ product.price }}</span>
@@ -87,6 +100,47 @@ const submitDeleteAll = async () => {
       </el-card>
     </el-col>
   </el-row>
+
+  <!-- 确定购物车对话框 -->
+  <el-dialog v-model="dialogFormVisible" title="您的购物车">
+    <el-row>
+      <el-col :span="6">商品名</el-col>
+      <el-col :span="6">商品单价</el-col>
+      <el-col :span="6">购买商品数量</el-col>
+      <el-col :span="6">小计</el-col>
+    </el-row>
+    <br />
+    <el-row
+      v-for="product in productStore.cartProductList"
+      :key="product"
+      style="line-height: 2"
+    >
+      <el-col :span="6">{{ product.productName }}</el-col>
+      <el-col :span="6">{{ product.price }}</el-col>
+      <el-col :span="6">{{ product.count }}</el-col>
+      <el-col :span="6">{{ product.count * product.price }}</el-col>
+    </el-row>
+    <br />
+    <el-row>
+      <el-col :span="6"></el-col>
+      <el-col :span="6"></el-col>
+      <el-col :span="6"></el-col>
+      <el-col :span="6">共计:{{ sumPrice }}元</el-col>
+    </el-row>
+    <!-- <ul>
+      <li v-for="product in productStore.cartProductList" :key="product">
+        {{ product.ProductName }}{{ product.price }}{{ product.count }}
+      </li>
+    </ul> -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitAllPurchase">
+          结算购物车
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <style scoped>
 .hover-zoom {

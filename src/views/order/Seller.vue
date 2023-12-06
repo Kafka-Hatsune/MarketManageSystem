@@ -165,7 +165,6 @@ const showType = ref('已完成')
       </el-descriptions-item>
     </el-descriptions>
   </template>
-  <hr />
 </template>
 
 <style scoped></style>
