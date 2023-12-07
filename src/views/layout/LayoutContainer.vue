@@ -14,18 +14,20 @@ import {
   HomeFilled,
   WalletFilled,
   Wallet,
-  Calendar
+  Calendar,
+  BellFilled
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
-import { useUserStore } from '@/stores'
-import { onMounted, computed } from 'vue'
+import { useUserStore, useMessageStore } from '@/stores'
+import { onMounted, computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // 组件
 import CurrentTime from '@/components/timer/Clock.vue'
 
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 const router = useRouter()
 const currentTime = computed(() => new Date().getHours())
 const greeting = computed(() => {
@@ -39,6 +41,7 @@ const greeting = computed(() => {
 })
 onMounted(() => {
   userStore.getUser()
+  messageStore.queryIfHasUnreadMessage()
 })
 
 const handleCommand = async (key) => {
@@ -63,6 +66,16 @@ const handleCommand = async (key) => {
 const askPermissionForAdmin = async () => {
   // 放在路由守卫中判断权限
   router.push('/admin/home')
+}
+const activeNames = ref(['1'])
+const drawer = ref(false)
+const callDrawer = () => {
+  messageStore.getUnreadMessageList()
+  drawer.value = true
+}
+const handleClose = () => {
+  messageStore.queryIfHasUnreadMessage()
+  drawer.value = false
 }
 </script>
 
@@ -174,8 +187,7 @@ const askPermissionForAdmin = async () => {
     <el-container>
       <!-- header -->
       <el-header>
-        <el-col :span="8"></el-col>
-        <el-col :span="8"></el-col>
+        <el-col :span="14"></el-col>
         <el-col :span="4">
           <div>
             <CurrentTime></CurrentTime>
@@ -183,6 +195,18 @@ const askPermissionForAdmin = async () => {
         </el-col>
         <el-col :span="3">
           {{ userStore.user.userName }} : {{ greeting }}
+        </el-col>
+        <el-col :span="1">
+          <el-icon
+            v-if="messageStore.ifHas"
+            @click="callDrawer()"
+            class="message"
+          >
+            <BellFilled
+          /></el-icon>
+          <el-icon v-else @click="callDrawer()" class="message-red"
+            ><BellFilled
+          /></el-icon>
         </el-col>
         <el-col :span="2">
           <el-dropdown placement="bottom-end" @command="handleCommand">
@@ -200,8 +224,8 @@ const askPermissionForAdmin = async () => {
                 <el-dropdown-item command="profile" :icon="User"
                   >基本资料</el-dropdown-item
                 >
-                <el-dropdown-item command="avatar" :icon="Crop"
-                  >更换头像</el-dropdown-item
+                <el-dropdown-item command="message" :icon="Crop"
+                  >消息中心</el-dropdown-item
                 >
                 <el-dropdown-item command="password" :icon="EditPen"
                   >重置密码</el-dropdown-item
@@ -222,9 +246,32 @@ const askPermissionForAdmin = async () => {
       <el-footer>DB Homework ©2023</el-footer>
     </el-container>
   </el-container>
+
+  <!-- 抽屉 -->
+  <el-drawer v-model="drawer" title="未读消息列表" :before-close="handleClose">
+    <div v-if="messageStore.unreadMessageList.length === 0">您没有未读消息</div>
+    <div v-else>
+      <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse-item
+          v-for="(message, item, i) in messageStore.unreadMessageList"
+          :key="message"
+          :title="message.sender.userName + '给您发送的消息'"
+          :name="i"
+          >{{ message.content }}
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+  </el-drawer>
 </template>
 
 <style lang="scss" scoped>
+.message {
+  cursor: pointer;
+}
+.message-red {
+  cursor: pointer;
+  color: red;
+}
 .layout-container {
   height: 100vh;
 

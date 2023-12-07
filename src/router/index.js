@@ -23,6 +23,10 @@ const router = createRouter({
           component: () => import('@/views/user/UserProfile.vue')
         },
         {
+          path: '/user/message',
+          component: () => import('@/views/user/UserMessage.vue')
+        },
+        {
           path: '/product/:id',
           component: () => import('@/views/product/ProductDetail.vue')
         },

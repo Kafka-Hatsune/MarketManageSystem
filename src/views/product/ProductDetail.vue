@@ -11,6 +11,8 @@ import {
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import avatar from '@/assets/user/default.png'
+// 组件
+import MessageButton from '@/components/message/MessageButton.vue'
 const productStore = useProductStore()
 const routeId = router.currentRoute.value.params.id
 onMounted(() => {
@@ -101,10 +103,20 @@ const callDialog = async () => {
               :key="comment.createdTime"
             >
               <el-row>
-                <el-avatar :src="comment.publisher.avatar || avatar" />
-                <span style="height: line-height">
+                <el-col :span="2"
+                  ><el-avatar :src="comment.publisher.avatar || avatar"
+                /></el-col>
+                <el-col :span="3">{{ comment.publisher.userName }}</el-col>
+                <el-col :span="3">
+                  <MessageButton
+                    :userName="comment.publisher.userName"
+                  ></MessageButton
+                ></el-col>
+
+                <!-- <span style="height: line-height">
                   {{ comment.publisher.userName }}</span
                 >
+                -->
               </el-row>
               <div>{{ comment.text }}</div>
               <div>
@@ -121,7 +133,7 @@ const callDialog = async () => {
       <h1 class="title">{{ productStore.product.productName }}</h1>
       <ul class="ul-message">
         <li class="li-message">
-          <div><span>价格:</span> {{ productStore.product.price }}</div>
+          <div><span>价格:</span> {{ productStore.product.price }}元</div>
         </li>
         <li class="li-message">
           <div>商品种类: {{ productStore.product.typeName }}</div>

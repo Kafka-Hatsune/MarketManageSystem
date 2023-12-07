@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import { useProductStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
-
+import AskPromotionButton from '@/components/promotion/AskPromotionButton.vue'
 // 组件
 // import PostStatistic from '@/components/statistic/PostStatistic.vue'
 const productStore = useProductStore()
@@ -76,30 +76,44 @@ console.log('--------------------------------')
           :src="product.productPic[0]"
           style="width: 100%; height: 200px"
         />
-        <div style="padding: 14px">
-          <span>{{ product.productName }}</span>
+        <el-row style="padding-left: 14px"
+          ><h1>{{ product.productName }}</h1></el-row
+        >
+        <el-row style="padding-left: 14px">
           <div class="price">
             <span class="price1">¥</span
             ><span class="price2">{{ product.price }}</span>
           </div>
-          <div class="bottom">
-            <time class="time">{{ product.createdTime }}</time>
-            <el-button
-              text
-              class="button"
+        </el-row>
+        <el-row style="padding-left: 14px; padding-top: 5px">
+          <el-col :span="8"
+            ><el-button
+              type="primary"
               @click.stop="jump2Details(product.productId)"
               >详情页</el-button
-            >
-          </div>
-        </div>
+            ></el-col
+          >
+          <el-col :span="8"
+            ><AskPromotionButton
+              :productId="product.productId"
+            ></AskPromotionButton>
+          </el-col>
+          <el-col :span="8"></el-col>
+        </el-row>
+
+        <el-row class="time">创建于{{ product.createdTime }}</el-row>
       </el-card>
     </el-col>
   </el-row>
-
-  <!-- {{ productStore.postProductList }} -->
 </template>
 
 <style scoped>
+.time {
+  text-align: center;
+  color: gray;
+  font-size: smaller;
+  padding: 14px;
+}
 el-col {
   text-align: center;
 }
@@ -114,5 +128,17 @@ el-col {
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+.price {
+  display: flex;
+  justify-content: flex-end;
+}
+.price1 {
+  color: rgb(255, 80, 0);
+  font-size: medium;
+}
+.price2 {
+  color: rgb(255, 80, 0);
+  font-size: large;
 }
 </style>
