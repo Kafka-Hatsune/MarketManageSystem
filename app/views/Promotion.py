@@ -46,6 +46,7 @@ class ReceivePromotion(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
+            user = User.objects.get(name=userName)
             if userName != 'Admin':
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
@@ -56,6 +57,11 @@ class ReceivePromotion(APIView):
                     p.is_checked = True
                     p.begin_time = datetime.now()
                     p.save()
+                    # 向申请者发消息
+                    content = "您好，您对 " + p.product.product_name + " 商品的推广申请审核通过，已经开始推广"
+                    m = Message.objects.create(sender=user, recipient=p.applicant,
+                                               senderName=userName, recipientName=p.applicant.name,
+                                               content=content)
                     code, message = 200, '接受推广成功，开始推广'
                 else:
                     code, message = -3, '推广申请或商品不存在'
@@ -69,13 +75,20 @@ class RejectPromotion(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
+            user = User.objects.get(name=userName)
             if userName != 'Admin':
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 productId = request.data.get('productId')
-                promotion = Promotion.objects.filter(product_id=productId)
+                promotion = Promotion.objects.filter(product_id=productId, is_checked=False)
                 if promotion:
                     p = promotion[0]
+                    # 向申请者发消息
+                    content = "对不起，您对 " + p.product.product_name + " 商品推广申请被拒绝"
+                    m = Message.objects.create(sender=user, recipient=p.applicant,
+                                               senderName=userName, recipientName=p.applicant.name,
+                                               content=content)
+                    m.save()
                     p.delete()
                     code, message = 200, '拒绝推广成功'
                 else:

@@ -153,7 +153,7 @@ class Comment(models.Model):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(User,models.SET_NULL, blank=True, null=True, related_name='Message_sender')
+    sender = models.ForeignKey(User, models.SET_NULL, blank=True, null=True, related_name='Message_sender')
     recipient = models.ForeignKey(User, models.SET_NULL, blank=True, null=True, related_name='Message_recipient')
     senderName = models.CharField(max_length=NAME_LEN)
     recipientName = models.CharField(max_length=NAME_LEN)

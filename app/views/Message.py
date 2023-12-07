@@ -19,7 +19,7 @@ class SendMessage(APIView):
             try:
                 recipient_user = User.objects.get(name=recipient_name)
                 m = Message.objects.create(sender=user, recipient=recipient_user,
-                                           senderName=userName, recipient_name=recipient_name,
+                                           senderName=userName, recipientName=recipient_name,
                                            content=content)
                 m.save()
                 code, message = 200, '消息发送成功'
@@ -70,8 +70,6 @@ class GetAllMessage(APIView):
                     },
                     'content': m.content
                 })
-                m.status = 'read'
-                m.save()
             code, message = 200, '获取所有消息成功'
         return Response({'code': code, 'message': message, 'data': data})
 
