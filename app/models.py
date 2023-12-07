@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 
 EMAIL_LEN = 30
@@ -148,6 +150,33 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(User,models.SET_NULL, blank=True, null=True, related_name='Message_sender')
+    recipient = models.ForeignKey(User, models.SET_NULL, blank=True, null=True, related_name='Message_recipient')
+    senderName = models.CharField(max_length=NAME_LEN)
+    recipientName = models.CharField(max_length=NAME_LEN)
+    content = models.TextField()
+    status = models.CharField(max_length=20, default='unread')
+
+    class Meta:
+        db_table = 'message'
+
+
+class Promotion(models.Model):
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    begin_time = models.DateTimeField(blank=True, null=True)
+    length = models.IntegerField(default=5)         # 以分为单位
+    is_checked = models.BooleanField(default=False)
+
+    def get_end_time(self):
+        end_time = self.begin_time + timedelta(minutes=self.length)
+        return end_time
+
+    class Meta:
+        db_table = 'promotion'
 
 
 class Images(models.Model):

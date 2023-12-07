@@ -1,14 +1,11 @@
-from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.views import View
 from rest_framework.views import APIView, Request
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_protect
 from app.models import User, UserInfo, Images, Product, ProductType, ProductImages, Comment, Favorite, Cart, Order
-import json
 
-from app.utils import gen_token, get_header_token, decode_token
-from app.views.Util import getProductData
+from app.utils import get_header_token, decode_token
+from app.views.Util import getProductData, createOrder
 
 
 class PostProduct(APIView):
@@ -246,27 +243,7 @@ class PurchaseProduct(APIView):
             try:
                 product = Product.objects.get(id=productId)
                 count_to_buy = request.data.get('count')
-                stock = product.stock
-                if count_to_buy > stock:
-                    code, message = -3, '购买失败，购买商品数大于库存'
-                elif user.currentInfo is None:
-                    code, message = -4, '购买失败，请先设置默认收货地址'
-                else:
-                    # 修改商品信息
-                    product.stock -= count_to_buy
-                    product.sale += count_to_buy
-                    product.save()
-                    # 创建订单
-                    o = Order.objects.create(buyer=user, product=product, number=count_to_buy,
-                                             buyer_name=userName,
-                                             product_name=product.product_name,
-                                             seller_name=product.publisher.name,
-                                             price=product.price,
-                                             receiver_name=user.currentInfo.name,
-                                             receiver_phone=user.currentInfo.phone,
-                                             receiver_place=user.currentInfo.place)
-                    o.save()
-                    code, message = 200, '购买成功'
+                code, message = createOrder(user, product, count_to_buy)
             except Product.DoesNotExist:
                 code, message = -2, '购买的商品不存在'
         return Response({'code': code, 'message': message})
@@ -382,3 +359,23 @@ class CartModify(APIView):
             except Cart.DoesNotExist:
                 code, message = -3, '购物车中不存在该商品'
         return Response({'code': code, 'message': message})
+
+
+class CartUpdateAll(APIView):
+    def post(self, request):
+        code, message = 200, ''
+        token = get_header_token(request)
+        if not decode_token(token):
+            code, message = -1, '登录超时或者其他原因导致token失效'
+        else:
+            userName = decode_token(token)['username']
+            user = User.objects.get(name=userName)
+            cart_list = Cart.objects.filter(user=user)
+            for c in cart_list:
+                # 创建订单
+                code, message = createOrder(user, c.product, c.count)
+                # 从购物车删除该项
+                if code == 200:
+                    c.delete()
+        return Response({'code': code, 'message': message})
+

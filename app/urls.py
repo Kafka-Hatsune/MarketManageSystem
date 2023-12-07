@@ -1,12 +1,12 @@
 from django.urls import path, include, re_path
 from django.views.static import serve
 
-from app.views import User, Product, Util, Order, Administractor, Statistic
+from app.views import User, Product, Util, Order, Administractor, Statistic, Message, Promotion
 from app import views, utils
 from backend import settings
 
 urlpatterns = [
-    # user
+    # 用户
     path("register", User.Register.as_view()),
     path("login", User.Login.as_view()),
     path("user", User.GetUserInfo.as_view()),
@@ -36,6 +36,7 @@ urlpatterns = [
     path("product/cart/delete", Product.DeleteProductFromCart.as_view()),
     path("product/cart/select", Product.ProductCartSelect.as_view()),
     path("product/cart/modify", Product.CartModify.as_view()),
+    path("cart/update/all", Product.CartUpdateAll.as_view()),
 
     # 订单
     path("order/consumer", Order.GetPurchaseOrder.as_view()),
@@ -55,6 +56,19 @@ urlpatterns = [
     path("user/active/count", Statistic.GetActiveUserCount.as_view()),
     path("comment/count", Statistic.GetCommentCount.as_view()),
     path("order/active/count", Statistic.GetActiveOrderCount.as_view()),
+
+    # 消息
+    path("message/new", Message.SendMessage.as_view()),
+    path("message/unread/get", Message.GetUnreadMessage.as_view()),
+    path("message/all/get", Message.GetAllMessage.as_view()),
+    path("message/unread/query", Message.UnreadMessageQuery.as_view()),
+
+    # 推广
+    path("promotion/new", Promotion.RequestPromotion.as_view()),
+    path("promotion/update", Promotion.ReceivePromotion.as_view()),
+    path("promotion/delete", Promotion.RejectPromotion.as_view()),
+    path("promotion/get", Promotion.GetUncheckedPromotion.as_view()),
+    path("promotion/active", Promotion.GetActivePromotion.as_view()),
 
 
     # test

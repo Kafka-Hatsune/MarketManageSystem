@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from django.core.files import File
 from PIL import Image
 
-from app.models import Product, Comment, ProductImages, Images, User
+from app.models import Product, Comment, ProductImages, Images, User, Order
 
 
 def getProductData(p: Product):
@@ -26,7 +26,6 @@ def getProductData(p: Product):
             'text': c.text,
             'createdTime': c.get_create_time(),
             'publisher': {
-                # 'id': c.publisher.id,
                 'userName': c.publisher.name,
                 'avatar': None if not p.publisher.avatar else p.publisher.avatar.get_url()
             },
@@ -35,6 +34,32 @@ def getProductData(p: Product):
     return data
 
 
+def createOrder(user: User, product: Product, count_to_buy: int):
+    stock = product.stock
+    if count_to_buy > stock:
+        code, message = -3, product.product_name + '购买失败，库存不足'
+    elif user.currentInfo is None:
+        code, message = -4, '购买失败，请先设置默认收货地址'
+    else:
+        # 修改商品信息
+        product.stock -= count_to_buy
+        product.sale += count_to_buy
+        product.save()
+        # 创建订单
+        o = Order.objects.create(buyer=user, product=product, number=count_to_buy,
+                                 buyer_name=user.name,
+                                 product_name=product.product_name,
+                                 seller_name=product.publisher.name,
+                                 price=product.price,
+                                 receiver_name=user.currentInfo.name,
+                                 receiver_phone=user.currentInfo.phone,
+                                 receiver_place=user.currentInfo.place)
+        o.save()
+        code, message = 200, '购买成功'
+    return code, message
+
+
+# 未使用，探索中
 class DownloadFile(APIView):
     def post(self, request):
         # 创建工作簿
@@ -65,8 +90,6 @@ class DownloadFile(APIView):
         # 通过响应头告知浏览器下载该⽂件以及对应的文件名
         resp['content-disposition'] = f'attachment; filename*=utf-8''{filename}'
         return resp
-
-
 
 
 # 未使用，探索中
@@ -118,8 +141,6 @@ class UploadFile(APIView):
             # 创建Django模型实例
             # MyModel.objects.create(name=name, age=age, picture=picture_file)
 
-
-
         # file = request.FILES.get("file")
         # if not file:
         #     code, message = -1, '没有文件'
@@ -142,6 +163,3 @@ class UploadFile(APIView):
         #         img = Images.objects.create(img=image_data)
         #         img.save()
         return Response({'code': 0, 'message': "finish"})
-
-
-
