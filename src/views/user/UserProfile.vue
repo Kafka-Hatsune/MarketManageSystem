@@ -17,15 +17,13 @@ onMounted(() => {
 
 // 是在使用仓库中数据的初始值 (无需响应式) 解构无问题
 const {
-  user: { email, id, userName, avatar },
+  user: { email, userName },
   getUser
 } = useUserStore()
 
 const form = ref({
-  id,
-  userName,
   email,
-  avatar
+  userName
 })
 
 const rules = ref({
@@ -43,9 +41,9 @@ const submitForm = async () => {
   // 等待校验结果
   await formRef.value.validate()
   // 提交修改
-  await userUpdateInfoService(form.value)
+  await userUpdateInfoService(form.value.email)
   // 通知 user 模块，进行数据的更新
-  getUser()
+  await getUser()
   // 提示用户
   ElMessage.success('修改成功')
 }

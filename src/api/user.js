@@ -12,8 +12,8 @@ export const userLoginService = ({ userName, password }) =>
 export const userGetInfoService = () => request.get('/user')
 
 // 更新用户基本信息
-export const userUpdateInfoService = ({ id, name, email, avatar }) =>
-  request.patch('/user/update', { id, name, email, avatar })
+export const userUpdateInfoService = (email) =>
+  request.post('/user/basicInfor/update', { email })
 
 // 更新用户头像 avatar为FormData
 export const userUpdateAvatarService = (avatar) =>
