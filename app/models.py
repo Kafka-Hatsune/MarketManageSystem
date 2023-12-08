@@ -62,7 +62,7 @@ class ProductType(models.Model):
 class Product(models.Model):
     publisher = models.ForeignKey(User, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=PRODUCT_MAME_LEN, verbose_name='商品')
-    price = models.IntegerField()
+    price = models.FloatField()
     description = models.CharField(max_length=DESCRIPTION_LEN, verbose_name='描述')
     sale = models.IntegerField(default=0)
     stock = models.IntegerField()
@@ -88,8 +88,8 @@ class Favorite(models.Model):
         db_table = 'favorite'
         unique_together = (("user", "product"),)
 
-    def __str__(self):
-        return self.user, self.product
+    # def __str__(self):
+    #     return self.user, self.product
 
 
 class Cart(models.Model):
@@ -106,8 +106,8 @@ class Cart(models.Model):
         db_table = 'cart'
         unique_together = (("user", "product"),)
 
-    def __str__(self):
-        return self.user, self.product
+    # def __str__(self):
+    #     return self.user, self.product
 
 
 class Order(models.Model):
@@ -119,7 +119,7 @@ class Order(models.Model):
     number = models.IntegerField()
     create_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="ToBeShipped")
-    price = models.IntegerField()
+    price = models.FloatField()
     receiver_name = models.CharField(max_length=NAME_LEN, verbose_name='收货人姓名', default="")
     receiver_phone = models.CharField(max_length=PHONE_LEN, verbose_name='收货人手机号', default="")
     receiver_place = models.CharField(max_length=PLACE_LEN, verbose_name='收货地址', default="")

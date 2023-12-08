@@ -51,6 +51,7 @@ class ReceivePromotion(APIView):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 productId = request.data.get('productId')
+                print(productId)
                 promotion = Promotion.objects.filter(product_id=productId)
                 if promotion:
                     p = promotion[0]

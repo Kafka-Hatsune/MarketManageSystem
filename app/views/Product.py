@@ -362,7 +362,7 @@ class CartModify(APIView):
 
 
 class CartUpdateAll(APIView):
-    def post(self, request):
+    def get(self, request):
         code, message = 200, ''
         token = get_header_token(request)
         if not decode_token(token):

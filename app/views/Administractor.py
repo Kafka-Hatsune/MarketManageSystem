@@ -83,7 +83,7 @@ class GetAllOrders(APIView):
                             'place': o.receiver_place
                         }
                     })
-                code, message = 200, '获取所以订单成功'
+                code, message = 200, '获取所有订单成功'
         return Response({'code': code, 'message': message, 'data': data})
 
 
