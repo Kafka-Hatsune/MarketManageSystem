@@ -27,7 +27,7 @@ def getProductData(p: Product):
             'createdTime': c.get_create_time(),
             'publisher': {
                 'userName': c.publisher.name,
-                'avatar': None if not p.publisher.avatar else p.publisher.avatar.get_url()
+                'avatar': None if not c.publisher.avatar else c.publisher.avatar.get_url()
             },
         } for c in Comment.objects.filter(item=p)],
     }
