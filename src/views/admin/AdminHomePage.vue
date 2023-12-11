@@ -13,6 +13,16 @@ const callDrawer = (productId) => {
   productStore.getProduct(productId)
   drawer.value = true
 }
+const submitPermit = async (productId) => {
+  console.log(productId)
+  await promotionUpdateService({ productId })
+  await promotionStore.getPromotionList()
+}
+const submitRefuse = async (productId) => {
+  console.log(productId)
+  await promotionDeleteService({ productId })
+  await promotionStore.getPromotionList()
+}
 </script>
 <template>
   <el-table :data="promotionStore.promotionList" style="width: 100%">
@@ -36,14 +46,10 @@ const callDrawer = (productId) => {
     <el-table-column label="Operation" width="180">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <el-button
-            type="success"
-            @click="promotionUpdateService(scope.row.productId)"
+          <el-button type="success" @click="submitPermit(scope.row.productId)"
             >接受</el-button
           >
-          <el-button
-            type="danger"
-            @click="promotionDeleteService(scope.row.productId)"
+          <el-button type="danger" @click="submitRefuse(scope.row.productId)"
             >拒绝</el-button
           >
         </div>

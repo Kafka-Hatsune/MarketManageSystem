@@ -15,7 +15,8 @@ import {
   WalletFilled,
   Wallet,
   Calendar,
-  BellFilled
+  BellFilled,
+  Bell
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
@@ -200,12 +201,12 @@ const handleClose = () => {
           <el-icon
             v-if="messageStore.ifHas"
             @click="callDrawer()"
-            class="message"
+            class="message-red"
           >
             <BellFilled
           /></el-icon>
-          <el-icon v-else @click="callDrawer()" class="message-red"
-            ><BellFilled
+          <el-icon v-else @click="callDrawer()" class="message"
+            ><Bell
           /></el-icon>
         </el-col>
         <el-col :span="2">
