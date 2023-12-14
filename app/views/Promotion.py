@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from app.utils import get_header_token, decode_token
 from app.views.Util import getProductData
+from app.views.Util import judgeAdministrator
 
 
 class RequestPromotion(APIView):
@@ -47,7 +48,7 @@ class ReceivePromotion(APIView):
         else:
             userName = decode_token(token)['username']
             user = User.objects.get(name=userName)
-            if userName != 'Admin':
+            if judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 productId = request.data.get('productId')
@@ -77,7 +78,7 @@ class RejectPromotion(APIView):
         else:
             userName = decode_token(token)['username']
             user = User.objects.get(name=userName)
-            if userName != 'Admin':
+            if judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 productId = request.data.get('productId')
@@ -93,7 +94,7 @@ class RejectPromotion(APIView):
                     p.delete()
                     code, message = 200, '拒绝推广成功'
                 else:
-                    code, message = -3, '推广申请或商品不存在'
+                    code, message = -3, '推广申请的商品不存在'
         return Response({'code': code, 'message': message})
 
 
@@ -105,7 +106,7 @@ class GetUncheckedPromotion(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            if userName != 'Admin':
+            if judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 promotion_list = Promotion.objects.filter(is_checked=False)

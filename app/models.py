@@ -33,6 +33,11 @@ class User(models.Model):
         return self.name
 
 
+class Administrator(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    level = models.IntegerField()
+
+
 class UserInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # userInfo_id = models.IntegerField()

@@ -3,8 +3,9 @@ from django.views import View
 from rest_framework.views import APIView, Request
 from rest_framework.response import Response
 
-from app.models import Order, User
+from app.models import Order, User, Administrator
 from app.utils import get_header_token, decode_token
+from app.views.Util import judgeAdministrator
 
 
 class GetIfAdmin(APIView):
@@ -15,7 +16,8 @@ class GetIfAdmin(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            ifAdmin = (userName == 'Admin')
+            # ifAdmin = (userName == 'Admin')
+            ifAdmin = judgeAdministrator(userName)
             code, message = 200, '成功查询是否是管理员'
         return Response({'code': code, 'message': message, 'data': {'ifAdmin': ifAdmin}})
 
@@ -28,12 +30,13 @@ class GetAllUsers(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            if userName != 'Admin':
+
+            if not judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 user_list_raw = User.objects.all()
                 for u in user_list_raw:
-                    if u.name == 'Admin':
+                    if judgeAdministrator(u.name):
                         continue
                     data.append({
                         'userName': u.name,
@@ -41,7 +44,7 @@ class GetAllUsers(APIView):
                         'email': u.email,
                         'registerTime': u.get_register_time()
                     })
-                code, message = 200, '获取所有用户成功'
+                code, message = 200, '获取所有普通用户成功'
         return Response({'code': code, 'message': message, 'data': data})
 
 
@@ -53,7 +56,7 @@ class GetAllOrders(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            if userName != 'Admin':
+            if not judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 order_list_raw = Order.objects.all().order_by('-create_time')
@@ -95,14 +98,17 @@ class DeleteUser(APIView):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            if userName != 'Admin':
+            if not judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 delete_userName = request.data.get('userName')
                 try:
                     u = User.objects.get(name=delete_userName)
-                    u.delete()
-                    code, message = 200, '用户删除成功'
+                    if judgeAdministrator(u.name) and userName != 'Admin':
+                        code, message = -3, '您没有删除管理员的权限'
+                    else:
+                        u.delete()
+                        code, message = 200, '用户删除成功'
                 except User.DoesNotExist:
                     code, message = -2, '要删除的用户不存在'
         return Response({'code': code, 'message': message})
@@ -111,12 +117,11 @@ class DeleteUser(APIView):
 class DeleteOrder(APIView):
     def post(self, request):
         token = get_header_token(request)
-        data = []
         if not decode_token(token):
             code, message = -1, '登录超时或者其他原因导致token失效'
         else:
             userName = decode_token(token)['username']
-            if userName != 'Admin':
+            if not judgeAdministrator(userName):
                 code, message = -2, '您不是管理员，无权限进行此操作'
             else:
                 delete_order_id = request.data.get('id')
@@ -146,7 +151,6 @@ class UploadUsers(APIView):
             code, message = -2, '添加失败，表格格式错误'
         else:
             for row in sheet.iter_rows(min_row=2):
-                # 没写完   还要检查用户名是否已经存在 如果存在则不添加
                 list = User.objects.filter(name=row[1].value)
                 if list:
                     message = message + '用户' + row[1].value + '添加失败，已经有同名用户存在\n'
@@ -154,4 +158,49 @@ class UploadUsers(APIView):
                 u = User.objects.create(name=row[1].value, email=row[3].value, password=row[2].value)
                 u.save()
         return Response({'code': code, 'message': message})
+
+
+class AddNewAdministrator(APIView):
+    def post(self, request):
+        token = get_header_token(request)
+        if not decode_token(token):
+            code, message = -1, '登录超时或者其他原因导致token失效'
+        else:
+            userName = decode_token(token)['username']
+            if userName != 'Admin':
+                code, message = -2, '您无权添加管理员'
+            else:
+                name = request.data.get('userName')
+                try:
+                    u = User.objects.get(name=name)
+                    Administrator.objects.create(user=u, level=1)
+                    code, message = 200, '为用户添加权限成功'
+                except User.DoesNotExist:
+                    code, message = -2, '添加权限的用户不存在'
+        return Response({'code': code, 'message': message})
+
+
+class AdministratorSelect(APIView):
+    def get(self, request):
+        data = []
+        token = get_header_token(request)
+        if not decode_token(token):
+            code, message = -1, '登录超时或者其他原因导致token失效'
+        else:
+            userName = decode_token(token)['username']
+            if userName != 'Admin':
+                code, message = -2, '您无权查看其他管理员'
+            else:
+                admin_list_raw = Administrator.objects.all()
+                for ad in admin_list_raw:
+                    if ad.user.name == 'Admin':
+                        continue
+                    data.append({
+                        'userName': ad.user.name,
+                        'avatar': None if not ad.user.avatar else ad.user.avatar.get_url(),
+                        'email': ad.user.email,
+                        'registerTime': ad.user.get_register_time()
+                    })
+                code, message = 200, '获取所有管理员成功'
+        return Response({'code': code, 'message': message, 'data': data})
 

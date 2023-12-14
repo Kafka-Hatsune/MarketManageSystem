@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from django.core.files import File
 from PIL import Image
 
-from app.models import Product, Comment, ProductImages, Images, User, Order
+from app.models import Product, Comment, ProductImages, Images, User, Order, Administrator
 
 
 def getProductData(p: Product):
@@ -57,6 +57,11 @@ def createOrder(user: User, product: Product, count_to_buy: int):
         o.save()
         code, message = 200, '购买成功'
     return code, message
+
+
+def judgeAdministrator(userName):
+    user = User.objects.get(name=userName)
+    return Administrator.objects.filter(user=user).count() > 0
 
 
 # 未使用，探索中

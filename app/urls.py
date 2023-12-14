@@ -50,6 +50,8 @@ urlpatterns = [
     path("administractor/user/delete", Administractor.DeleteUser.as_view()),
     path("administractor/order/delete", Administractor.DeleteOrder.as_view()),
     path("administractor/users/new", Administractor.UploadUsers.as_view()),
+    path("administractor/new", Administractor.AddNewAdministrator.as_view()),
+    path("administractor/admin/all", Administractor.AdministratorSelect.as_view()),
 
     # 统计
     path("product/count", Statistic.GetProductCount.as_view()),
