@@ -56,3 +56,11 @@ export const userGetAllUserService = () =>
 // 删除用户(管理员)
 export const userDeleteUserService = ({ userName }) =>
   request.post('/administractor/user/delete', { userName })
+
+// 将用户添加为管理员
+export const userAddAdminService = ({ userName }) =>
+  request.post('/administractor/new', { userName })
+
+// 获取所有管理员信息
+export const userGetAllAdminService = () =>
+  request.get('/administractor/admin/all')

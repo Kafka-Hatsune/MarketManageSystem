@@ -8,7 +8,8 @@ import {
   CaretBottom,
   HomeFilled,
   Plus,
-  List
+  List,
+  Monitor
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import avatar from '@/assets/user/default.png'
@@ -92,6 +93,10 @@ const handleCommand = async (key) => {
           <el-menu-item index="/admin/user/list">
             <el-icon><List /></el-icon>
             <span>用户列表</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/admin/list">
+            <el-icon><Monitor /></el-icon>
+            <span>管理员列表</span>
           </el-menu-item>
         </el-sub-menu>
 

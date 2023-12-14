@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useUserStore } from '@/stores'
-import { userDeleteUserService, userAddAdminService } from '@/api/user.js'
+import { userDeleteUserService } from '@/api/user.js'
 import { ElMessage } from 'element-plus'
 import default_avatar from '@/assets/user/default.png'
 const userStore = useUserStore()
 onMounted(() => {
-  userStore.getUserList()
+  userStore.getAdminList()
 })
 
 const handleDelete = async (userName) => {
@@ -14,19 +14,11 @@ const handleDelete = async (userName) => {
   if (res.data.code === 200) {
     ElMessage.success('删除成功')
   }
-  userStore.getUserList()
-}
-const handleAddAdmin = async (userName) => {
-  const res = await userAddAdminService({ userName })
-  if (res.data.code === 200) {
-    ElMessage.success('添加管理员成功,请于管理员列表查看')
-  }
-  userStore.getUserList()
+  userStore.getAdminList()
 }
 </script>
 <template>
-  <!-- 这是用户列表 {{ userStore.userList }} -->
-  <el-table :data="userStore.userList" style="width: 100%">
+  <el-table :data="userStore.adminList" style="width: 100%">
     <el-table-column prop="avatar" label="Avatar" width="180">
       <template #default="scope">
         <div style="display: flex; align-items: center">
@@ -50,15 +42,7 @@ const handleAddAdmin = async (userName) => {
               size="small"
               type="danger"
               @click="handleDelete(scope.row.userName)"
-              >删除用户</el-button
-            ></el-col
-          >
-          <el-col :span="12">
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleAddAdmin(scope.row.userName)"
-              >添加为管理员</el-button
+              >删除管理员</el-button
             ></el-col
           >
         </el-row>

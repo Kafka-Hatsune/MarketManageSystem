@@ -4,7 +4,8 @@ import {
   userGetInfoService,
   userGetAllUserService,
   userGetDefaultRecInforService,
-  userGetAllRecInforService
+  userGetAllRecInforService,
+  userGetAllAdminService
 } from '@/api/user'
 
 // 用户模块 token setToken removeToken
@@ -43,7 +44,11 @@ export const useUserStore = defineStore(
       const res = await userGetAllUserService()
       userList.value = res.data.data
     }
-
+    const adminList = ref([])
+    const getAdminList = async () => {
+      const res = await userGetAllAdminService()
+      adminList.value = res.data.data
+    }
     return {
       token,
       setToken,
@@ -56,7 +61,9 @@ export const useUserStore = defineStore(
       getCurRecInfor,
       getAllRecInfor,
       userList,
-      getUserList
+      getUserList,
+      adminList,
+      getAdminList
     }
   },
   {
