@@ -61,6 +61,7 @@ def createOrder(user: User, product: Product, count_to_buy: int):
 
 def judgeAdministrator(userName):
     user = User.objects.get(name=userName)
+    print(user.name)
     return Administrator.objects.filter(user=user).count() > 0
 
 
