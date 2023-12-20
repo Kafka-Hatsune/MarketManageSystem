@@ -7,6 +7,7 @@ import {
   userGetAllRecInforService,
   userGetAllAdminService
 } from '@/api/user'
+import { ElMessage } from 'element-plus'
 
 // 用户模块 token setToken removeToken
 export const useUserStore = defineStore(
@@ -47,6 +48,9 @@ export const useUserStore = defineStore(
     const adminList = ref([])
     const getAdminList = async () => {
       const res = await userGetAllAdminService()
+      if (res.data.code === -2) {
+        ElMessage.warning(res.data.message)
+      }
       adminList.value = res.data.data
     }
     return {

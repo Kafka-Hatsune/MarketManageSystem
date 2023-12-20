@@ -3,8 +3,8 @@ import { useUserStore } from '@/stores'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://127.0.0.1:4523/m1/3576156-0-default'
-// const baseURL = 'http://127.0.0.1:8000/'
+// const baseURL = 'http://127.0.0.1:4523/m1/3576156-0-default'
+const baseURL = 'http://127.0.0.1:8000/'
 // 创建一个新的axios实例
 const instance = axios.create({
   baseURL, // 基础地址
@@ -30,6 +30,9 @@ instance.interceptors.response.use(
     console.log('经过了响应拦截器')
     // 200 OK
     if (res.data.code === 200) {
+      return res
+    }
+    if (res.data.message === '您无权查看其他管理员') {
       return res
     }
     // 处理业务失败, 给错误提示，抛出错误
