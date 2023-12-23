@@ -78,7 +78,7 @@ class AddProductComment(APIView):
 
 class GetAllProducts(APIView):
     def get(self, request):
-        code, message = 200, ''  # 不检测token也可以吧
+        code, message = 200, ''
         product_list = []
         product_list_raw = Product.objects.all()
         for p in product_list_raw:

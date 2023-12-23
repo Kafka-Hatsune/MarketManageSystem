@@ -20,8 +20,8 @@ class GetPurchaseOrder(APIView):
                 data.append({
                     'id': o.id,
                     'product': {
-                        'productName': o.product.product_name,
-                        'price': o.price
+                        'productName': o.product_name,
+                        'price': o.pricegit
                     },
                     'number': o.number,
                     'status': o.status,

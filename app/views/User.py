@@ -153,17 +153,6 @@ class BasicInfoUpdate(APIView):
         else:
             userName = decode_token(token)['username']
             user = User.objects.get(name=userName)
-
-            '''
-            newName = request.data.get("userName")
-            if not newName:
-                u = User.objects.filter(name = newName)
-                if u.exists():
-                    code, message = -2, '更改失败，用户名已经存在'
-                else:
-                    user.name = newName
-            '''
-
             email = request.data.get("email")
             if email is not None:
                 user.email = email

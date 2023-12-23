@@ -108,6 +108,7 @@ class DeleteUser(APIView):
                         code, message = -3, '您没有删除管理员的权限'
                     else:
                         u.delete()
+                        print()
                         code, message = 200, '用户删除成功'
                 except User.DoesNotExist:
                     code, message = -2, '要删除的用户不存在'
