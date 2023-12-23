@@ -155,7 +155,7 @@ const handleCommand = async (key) => {
         <router-view></router-view>
       </el-main>
       <!-- footer -->
-      <el-footer>DB Homework ©2023</el-footer>
+      <el-footer>It's MyGO!!©2023</el-footer>
     </el-container>
   </el-container>
 </template>
