@@ -137,7 +137,7 @@ class DeleteOrder(APIView):
 
 class UploadUsers(APIView):
     def post(self, request):
-        code, message = 200, ''
+        code, message = 200, '批量添加操作完成 '
         file = request.FILES.get("file")
         if not file:
             code, message = -1, '未上传文件'
@@ -154,6 +154,7 @@ class UploadUsers(APIView):
             for row in sheet.iter_rows(min_row=2):
                 list = User.objects.filter(name=row[1].value)
                 if list:
+                    code = -3
                     message = message + '用户' + row[1].value + '添加失败，已经有同名用户存在\n'
                     continue
                 u = User.objects.create(name=row[1].value, email=row[3].value, password=row[2].value)
