@@ -44,7 +44,7 @@ const submit = async () => {
   formData.append('file', file)
   const res = await userUploadExcelService(formData)
   if (res.data.code === 200) {
-    ElMessage.success('更新头像成功')
+    ElMessage.success('批量添加用户成功')
   }
   // 失败提示由响应拦截器去做
 }
