@@ -152,12 +152,17 @@ class UploadUsers(APIView):
             code, message = -2, '添加失败，表格格式错误'
         else:
             for row in sheet.iter_rows(min_row=2):
-                list = User.objects.filter(name=row[1].value)
+                if all(cell.value is None for cell in row):
+                    continue
+                name = str(row[1].value)
+                email = str(row[3].value)
+                password = str(row[2].value)
+                list = User.objects.filter(name=name)
                 if list:
                     code = -3
-                    message = message + '用户' + row[1].value + '添加失败，已经有同名用户存在\n'
+                    message = message + '用户' + str(name) + '添加失败，已经有同名用户存在\n'
                     continue
-                u = User.objects.create(name=row[1].value, email=row[3].value, password=row[2].value)
+                u = User.objects.create(name=name, email=email, password=password)
                 u.save()
         return Response({'code': code, 'message': message})
 

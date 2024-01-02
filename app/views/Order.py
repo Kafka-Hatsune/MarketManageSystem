@@ -17,11 +17,13 @@ class GetPurchaseOrder(APIView):
 
             order_list_raw = Order.objects.filter(buyer=user)
             for o in order_list_raw:
+                print('------------------------')
+                print(o.price)
                 data.append({
                     'id': o.id,
                     'product': {
                         'productName': o.product_name,
-                        'price': o.pricegit
+                        'price': o.price
                     },
                     'number': o.number,
                     'status': o.status,
